@@ -1,0 +1,63 @@
+Starting reduced IPR smoke: 54 cases
+Starting IPR smoke test: 54 cases
+[1/54] family=spectral_circle q=0 s1=8 alpha=0.0 disorder=0.0 seed=123
+[2/54] family=spectral_circle q=0 s1=8 alpha=0.0 disorder=4.0 seed=123
+[3/54] family=spectral_circle q=0 s1=8 alpha=0.0 disorder=8.0 seed=123
+[4/54] family=spectral_circle q=0 s1=16 alpha=0.0 disorder=0.0 seed=123
+[5/54] family=spectral_circle q=0 s1=16 alpha=0.0 disorder=4.0 seed=123
+[6/54] family=spectral_circle q=0 s1=16 alpha=0.0 disorder=8.0 seed=123
+[7/54] family=spectral_circle q=1 s1=8 alpha=0.0 disorder=0.0 seed=123
+[8/54] family=spectral_circle q=1 s1=8 alpha=0.0 disorder=4.0 seed=123
+[9/54] family=spectral_circle q=1 s1=8 alpha=0.0 disorder=8.0 seed=123
+[10/54] family=spectral_circle q=1 s1=16 alpha=0.0 disorder=0.0 seed=123
+[11/54] family=spectral_circle q=1 s1=16 alpha=0.0 disorder=4.0 seed=123
+[12/54] family=spectral_circle q=1 s1=16 alpha=0.0 disorder=8.0 seed=123
+[13/54] family=spectral_circle q=-1 s1=8 alpha=0.0 disorder=0.0 seed=123
+[14/54] family=spectral_circle q=-1 s1=8 alpha=0.0 disorder=4.0 seed=123
+[15/54] family=spectral_circle q=-1 s1=8 alpha=0.0 disorder=8.0 seed=123
+[16/54] family=spectral_circle q=-1 s1=16 alpha=0.0 disorder=0.0 seed=123
+[17/54] family=spectral_circle q=-1 s1=16 alpha=0.0 disorder=4.0 seed=123
+[18/54] family=spectral_circle q=-1 s1=16 alpha=0.0 disorder=8.0 seed=123
+[19/54] family=ring q=0 s1=8 alpha=0.0 disorder=0.0 seed=123
+[20/54] family=ring q=0 s1=8 alpha=0.0 disorder=4.0 seed=123
+[21/54] family=ring q=0 s1=8 alpha=0.0 disorder=8.0 seed=123
+[22/54] family=ring q=0 s1=16 alpha=0.0 disorder=0.0 seed=123
+[23/54] family=ring q=0 s1=16 alpha=0.0 disorder=4.0 seed=123
+[24/54] family=ring q=0 s1=16 alpha=0.0 disorder=8.0 seed=123
+[25/54] family=ring q=1 s1=8 alpha=0.0 disorder=0.0 seed=123
+[26/54] family=ring q=1 s1=8 alpha=0.0 disorder=4.0 seed=123
+[27/54] family=ring q=1 s1=8 alpha=0.0 disorder=8.0 seed=123
+[28/54] family=ring q=1 s1=16 alpha=0.0 disorder=0.0 seed=123
+[29/54] family=ring q=1 s1=16 alpha=0.0 disorder=4.0 seed=123
+[30/54] family=ring q=1 s1=16 alpha=0.0 disorder=8.0 seed=123
+[31/54] family=ring q=-1 s1=8 alpha=0.0 disorder=0.0 seed=123
+[32/54] family=ring q=-1 s1=8 alpha=0.0 disorder=4.0 seed=123
+[33/54] family=ring q=-1 s1=8 alpha=0.0 disorder=8.0 seed=123
+[34/54] family=ring q=-1 s1=16 alpha=0.0 disorder=0.0 seed=123
+[35/54] family=ring q=-1 s1=16 alpha=0.0 disorder=4.0 seed=123
+[36/54] family=ring q=-1 s1=16 alpha=0.0 disorder=8.0 seed=123
+[37/54] family=wilson_ring q=0 s1=8 alpha=0.0 disorder=0.0 seed=123
+[38/54] family=wilson_ring q=0 s1=8 alpha=0.0 disorder=4.0 seed=123
+[39/54] family=wilson_ring q=0 s1=8 alpha=0.0 disorder=8.0 seed=123
+[40/54] family=wilson_ring q=0 s1=16 alpha=0.0 disorder=0.0 seed=123
+[41/54] family=wilson_ring q=0 s1=16 alpha=0.0 disorder=4.0 seed=123
+[42/54] family=wilson_ring q=0 s1=16 alpha=0.0 disorder=8.0 seed=123
+[43/54] family=wilson_ring q=1 s1=8 alpha=0.0 disorder=0.0 seed=123
+[44/54] family=wilson_ring q=1 s1=8 alpha=0.0 disorder=4.0 seed=123
+[45/54] family=wilson_ring q=1 s1=8 alpha=0.0 disorder=8.0 seed=123
+[46/54] family=wilson_ring q=1 s1=16 alpha=0.0 disorder=0.0 seed=123
+[47/54] family=wilson_ring q=1 s1=16 alpha=0.0 disorder=4.0 seed=123
+[48/54] family=wilson_ring q=1 s1=16 alpha=0.0 disorder=8.0 seed=123
+[49/54] family=wilson_ring q=-1 s1=8 alpha=0.0 disorder=0.0 seed=123
+[50/54] family=wilson_ring q=-1 s1=8 alpha=0.0 disorder=4.0 seed=123
+[51/54] family=wilson_ring q=-1 s1=8 alpha=0.0 disorder=8.0 seed=123
+[52/54] family=wilson_ring q=-1 s1=16 alpha=0.0 disorder=0.0 seed=123
+[53/54] family=wilson_ring q=-1 s1=16 alpha=0.0 disorder=4.0 seed=123
+[54/54] family=wilson_ring q=-1 s1=16 alpha=0.0 disorder=8.0 seed=123
+Completed 54 cases in 1.7s
+
+IPR Smoke Test Complete
+Verdict: ipr_smoke_fail
+Run directory: reports\RUNS\ipr_smoke_reduced
+Verdict: ipr_smoke_fail
+Contrast: 1.17x

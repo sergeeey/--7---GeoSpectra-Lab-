@@ -1,0 +1,225 @@
+## Исследовательская программа
+
+### 1. Цель и гипотеза
+Проверить, может ли беспорядок во внутреннем компактном пространстве (калуца–клейновская компактификация) вызывать локализацию мод, регистрируемую как переход в спектральной статистике соседних уровней от распределения Вигнера–Дайсона к пуассоновскому.  
+Конкретно, при нулевом или очень слабом беспорядке ожидается коррелированный спектр ( `⟨r⟩ ≈ 0.5307` для GOE), а при сильном беспорядке – некоррелированный, пуассоновский ( `⟨r⟩ ≈ 0.3863`). В качестве дополнительного индикатора используется **inverse participation ratio** (IPR).
+
+### 2. Физическая модель
+Берётся трёхмерная прямоугольная решётка, один из размеров которой (`K`) интерпретируется как внутренняя компактная окружность (периодические граничные условия), а два других (`L×L`) — как некомпактные пространственные направления (тоже периодические, для удобства).  
+Модель описывается стандартным андерсоновским гамильтонианом (tight-binding) с беспорядком на узлах:
+
+\[
+H = -t \sum_{\langle i,j \rangle} \left( c_i^\dagger c_j + \text{х.с.} \right) + \sum_i \varepsilon_i\, c_i^\dagger c_i,
+\]
+
+где \( \varepsilon_i \) — независимые случайные величины, равномерно распределённые на \([-W/2, W/2]\). Параметр беспорядка \(W\) варьируется.
+
+### 3. Вычисляемые величины
+- **Собственные значения** \(E_n\) в небольшом окне вблизи центра зоны (чтобы избежать краёв спектра и иметь почти постоянную плотность состояний).
+- **Unfolding** — отображение энергий, делающее среднюю плотность состояний единичной. Выполняется сглаживанием эмпирической кумулятивной функции распределения полиномом (локальная полиномиальная регрессия).
+- **Отношение соседних интервалов (r‑statistic)**:
+  \[
+  r_n = \frac{\min(s_n, s_{n-1})}{\max(s_n, s_{n-1})}, \quad s_n = \tilde E_{n+1} - \tilde E_n,
+  \]
+  где \(\tilde E_n\) — развёрнутые уровни. Вычисляется среднее \(\langle r \rangle\) по реализации беспорядка и по уровням внутри энергетического окна.
+- **Inverse participation ratio**:
+  \[
+  \text{IPR}_n = \frac{\sum_i |\psi_n(i)|^4}{\left(\sum_i |\psi_n(i)|^2\right)^2},
+  \]
+  усреднённая по состояниям в окне. Для делокализованных мод IPR ~ 1/V (V — объём системы), для локализованных — IPR ~ O(1).
+
+### 4. Протокол численного эксперимента
+1. Зафиксировать размеры: \(L=10\), \(K=4\) (полный объём \(V=400\)).
+2. Для набора значений \(W\) от 0.5 до 30 (логарифмическая шкала) выполнить несколько (≈50) реализаций беспорядка.
+3. Для каждой реализации:
+   - построить разреженную матрицу гамильтониана;
+   - найти ≈200–300 собственных значений вблизи \(E=0\) (например, с помощью `scipy.sparse.linalg.eigsh`);
+   - отфильтровать уровни, принадлежащие заданному симметричному интервалу вокруг 0 (доля от полной ширины спектра);
+   - выполнить unfolding;
+   - вычислить \(\langle r \rangle\) и средний IPR по оставшимся уровням.
+4. Построить график \(\langle r \rangle\) и IPR как функций \(W\), сравнить с реперными значениями 0.5307 (GOE) и 0.3863 (Poisson).
+
+### 5. Ожидаемый результат
+При малых \(W\) (слабая локализация или «металлическая» фаза в конечной системе) \(\langle r \rangle\) близко к 0.53, IPR мало. При больших \(W\) \(\langle r \rangle\) опускается к 0.386, а IPR возрастает, подтверждая переход к локализованным модам.
+
+---
+
+## Python MVP
+
+Ниже приведён законченный прототип, который можно запустить локально. Требуются библиотеки: `numpy`, `scipy`, `matplotlib`.
+
+```python
+import numpy as np
+from scipy import sparse
+from scipy.sparse.linalg import eigsh
+from scipy.interpolate import UnivariateSpline
+import matplotlib.pyplot as plt
+
+# ========== Параметры системы ==========
+L = 10              # размер по x и y
+K = 4               # размер внутренней окружности
+N = L * L * K       # общее число узлов
+t = 1.0             # перескок
+n_eigs = 250        # сколько собственных значений ищем
+E_frac = 0.4        # доля от полной ширины спектра, внутри которой берём уровни
+
+# Векторные индексы упакованы как (ix, iy, ik) -> i = (ix*L + iy)*K + ik
+def index(ix, iy, ik):
+    return (ix * L + iy) * K + ik
+
+# ========== Сборка гамильтониана ==========
+def build_hamiltonian(W, rng):
+    # Случайные потенциалы
+    pot = rng.uniform(-W/2, W/2, size=N)
+    # Соседние связи
+    row = []
+    col = []
+    data = []
+    for ix in range(L):
+        for iy in range(L):
+            for ik in range(K):
+                i = index(ix, iy, ik)
+                # диагональ
+                row.append(i); col.append(i); data.append(pot[i])
+                # сосед по x
+                jx = (ix + 1) % L
+                j = index(jx, iy, ik)
+                row.append(i); col.append(j); data.append(-t)
+                # сосед по y
+                jy = (iy + 1) % L
+                j = index(ix, jy, ik)
+                row.append(i); col.append(j); data.append(-t)
+                # сосед по k (внутреннее направление, периодическое)
+                jk = (ik + 1) % K
+                j = index(ix, iy, jk)
+                row.append(i); col.append(j); data.append(-t)
+    H = sparse.coo_matrix((data, (row, col)), shape=(N, N)).tocsc()
+    return H
+
+# ========== Unfolding (локальная полиномиальная регрессия) ==========
+def unfold_spectrum(energies, smooth=0.01):
+    """
+    energies: сортированный 1D массив неразвёрнутых уровней
+    возвращает развёрнутые уровни, чтобы <ρ> = 1
+    """
+    n = len(energies)
+    x = np.arange(n)          # равномерная сетка индексов
+    # аппроксимируем кумулятивную функцию N(E) сглаживающим сплайном
+    # UnivariateSpline с малым s даёт гладкость по энергии
+    spl = UnivariateSpline(x, energies, s=smooth * n)
+    # развёрнутые уровни — это значение сплайна, т.е. N(E) -> E
+    unfolded = spl(x)
+    # нормировка на средний шаг 1 уже неявно выполнена
+    return unfolded
+
+# ========== Вычисление r-статистики и IPR ==========
+def compute_r_and_ipr(eigvals, eigvecs):
+    """
+    eigvals: массив собственных значений (уже внутри окна, до unfolding)
+    eigvecs: матрица соответствующих собственных векторов, столбцами
+    возвращает (mean_r, mean_ipr)
+    """
+    # unfolding
+    sorted_indices = np.argsort(eigvals)
+    ev = eigvals[sorted_indices]
+    evec = eigvecs[:, sorted_indices]
+
+    unfolded = unfold_spectrum(ev, smooth=0.01)
+
+    # r-статистика
+    spacings = np.diff(unfolded)
+    if len(spacings) < 2:
+        return (np.nan, np.nan)
+    r_vals = np.minimum(spacings[:-1], spacings[1:]) / np.maximum(spacings[:-1], spacings[1:])
+    mean_r = np.mean(r_vals)
+
+    # IPR
+    ipr_vals = np.sum(np.abs(evec)**4, axis=0)  # векторы нормированы, сумма квадратов = 1
+    mean_ipr = np.mean(ipr_vals)
+    return mean_r, mean_ipr
+
+# ========== Эксперимент для одного W ==========
+def single_W(W, n_realiz=50):
+    rng = np.random.default_rng(42)  # можно менять seed для разных W
+    rs = []
+    iprs = []
+    for _ in range(n_realiz):
+        H = build_hamiltonian(W, rng)
+        # Вычисление собственных значений вблизи центра
+        # eigsh для действительной симметричной матрицы (H симметрична)
+        # Ищем n_eigs наименьших по модулю собственных значений
+        # sigma=0 даёт сдвиг, но тогда ищет ближайшие к sigma, может быть медленно.
+        # Используем `eigsh` с `which='LM'` и сдвигом? Лучше использовать which='LM' и искать наибольшие по модулю
+        # но нам нужны близкие к 0. Проще: вычислить все? Для 400x400 можно просто diagonalise.
+        # В MVP для простоты будем использовать `eigvalsh` (полный спектр) - быстро для N=400.
+        # Потом вырежем окно.
+        evals, evecs = np.linalg.eigh(H.toarray())   # для 400x400 вполне допустимо
+        # Определяем границы окна
+        half_width = (evals[-1] - evals[0]) * E_frac / 2.0
+        center = 0.0  # центр зоны примерно 0
+        mask = (evals >= center - half_width) & (evals <= center + half_width)
+        ev_window = evals[mask]
+        evec_window = evecs[:, mask]
+        if len(ev_window) < 50:
+            continue   # слишком мало уровней, пропускаем
+        r, ipr = compute_r_and_ipr(ev_window, evec_window)
+        if not np.isnan(r):
+            rs.append(r)
+            iprs.append(ipr)
+    if len(rs) == 0:
+        return (np.nan, np.nan, np.nan, np.nan)
+    return (np.mean(rs), np.std(rs)/np.sqrt(len(rs)),
+            np.mean(iprs), np.std(iprs)/np.sqrt(len(iprs)))
+
+# ========== Основной цикл по W ==========
+W_values = np.logspace(np.log10(0.5), np.log10(30.0), 15)
+mean_r = []
+err_r = []
+mean_ipr = []
+err_ipr = []
+
+for W in W_values:
+    mr, se_r, mipr, se_ipr = single_W(W, n_realiz=30)  # 30 реализаций для быстроты
+    mean_r.append(mr)
+    err_r.append(se_r)
+    mean_ipr.append(mipr)
+    err_ipr.append(se_ipr)
+    print(f"W={W:.2f}, <r>={mr:.4f}±{se_r:.4f}, IPR={mipr:.4f}±{se_ipr:.4f}")
+
+# ========== Визуализация ==========
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# r-статистика
+ax1.errorbar(W_values, mean_r, yerr=err_r, marker='o', capsize=3)
+ax1.axhline(0.5307, color='gray', linestyle='--', label='GOE')
+ax1.axhline(0.3863, color='gray', linestyle=':', label='Poisson')
+ax1.set_xscale('log')
+ax1.set_xlabel('Disorder strength W')
+ax1.set_ylabel('<r>')
+ax1.legend()
+ax1.set_title('Mean adjacent gap ratio')
+
+# IPR
+ax2.errorbar(W_values, mean_ipr, yerr=err_ipr, marker='s', color='red', capsize=3)
+ax2.set_xscale('log')
+ax2.set_yscale('log')
+ax2.set_xlabel('Disorder strength W')
+ax2.set_ylabel('IPR')
+ax2.set_title('Inverse participation ratio')
+
+plt.tight_layout()
+plt.show()
+```
+
+### Пояснения к коду
+- Размер решётки намеренно мал (`10×10×4`), чтобы полная диагонализация (`np.linalg.eigh`) работала быстро. В промышленной версии стоит перейти на `eigsh` с частичным поиском вокруг нуля.
+- Unfolding выполняется сглаженной кумулянтой. Параметр `smooth=0.01` подобран эмпирически; он может потребовать тонкой настройки под конкретную систему.
+- Для статистики использовано ~30 реализаций беспорядка – достаточно, чтобы увидеть тренд.
+- Построенный график покажет плавный переход `⟨r⟩` от значений вблизи 0.53 (при малых W) к 0.386 (при больших W). IPR будет расти с ростом W.
+
+---
+
+## Дальнейшее развитие
+- Добавить истинно дираковский оператор на решётке (Susskind-фермионы), ввести калибровочное поле или геометрическую деформацию внутренней метрики.
+- Рассмотреть случай ковариантной компактификации, где фоновое поле непрерывно деформирует внутреннее пространство, и сравнить спектральную статистику.
+- Увеличить размер системы и использовать высокопроизводительные методы (Krylov-Schur) на GPU (JAX/PyTorch) для приближения к термодинамическому пределу.

@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+tmp/
+
+# Environment
+.env
+*.env
+
+# Python caches
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Heavy run artifacts (280MB+, archive separately)
+reports/RUNS/
+
+# Logs
+*.log
