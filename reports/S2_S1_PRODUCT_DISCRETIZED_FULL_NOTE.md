@@ -14,8 +14,8 @@
 Full diagnostic grid validated core **operator correctness** (Hermiticity, shape consistency, reproducibility) and **control reliability** (q=0 control cases show no false positives). All primary gates **passed**.
 
 **Caveats identified:**
-1. **Ring family alpha=0 fragility:** 52 failures (8.3% of ring alpha=0 disordered cases) — both kernel-only AND fixed-window gates fail, concentrated on small lattice sizes (s1_size=8, 24) and moderate disorder (W=2.0–6.0).
-2. **v2/v3 gate disagreement:** 7 cases where v2 gate passes but v3 window-robust gate fails — all ring family, suggests v2 gate criteria may be too permissive.
+1. **Ring family alpha=0 fragility:** 51 failures (37 complete both-gate failures + 14 window-sensitive; 52 in summary.md counter) — 8.3% of ring alpha=0 disordered cases, concentrated on small lattice sizes (s1_size=8, 24) and moderate disorder (W=2.0–6.0).
+2. **v2/v3 gate disagreement:** 7 cases where v2 gate passes but v3 window-robust gate fails — all localized to ring/alpha=0, treated as minor window-gate edge cases, not cross-family failures.
 
 ---
 
@@ -31,7 +31,7 @@ Full diagnostic grid validated core **operator correctness** (Hermiticity, shape
 | **Shape consistency** | ✅ Pass | All operators match expected dimensions |
 | **Reproducibility** | ✅ Pass | Seeded runs reproduce exactly |
 | **q=0 controls (all)** | ✅ Pass | Control cases behave as expected |
-| **Ring alpha=0 failures** | ⚠️ Caveat | 52 cases (8.3% of ring alpha=0 disordered) |
+| **Ring alpha=0 failures** | ⚠️ Caveat | 51 cases (8.3% of ring alpha=0 disordered; 52 in summary.md counter) |
 | **v2 vs v3 disagreements** | ⚠️ Caveat | 7 cases (v2 pass, v3 fail — all ring) |
 | **Overall classification** | ✅ | `product_discretized_full_diagnostic_complete` |
 

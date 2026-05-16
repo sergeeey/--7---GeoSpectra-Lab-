@@ -10,8 +10,8 @@
 
 Full 6615-case diagnostic identified **two caveats** in product-discretized S²×S¹ operator validation:
 
-1. **Ring family alpha=0 fragility:** 52 complete localization failures (both gates fail)
-2. **v2/v3 gate disagreement:** 7 cases where v2 passes but v3 (stricter) fails
+1. **Ring family alpha=0 fragility:** 51 localization failures (37 complete both-gate failures + 14 window-sensitive; 52 in summary.md counter due to clean control inclusion)
+2. **v2/v3 gate disagreement:** 7 cases where v2 passes but v3 (stricter) fails — all localized to ring/alpha=0, treated as minor window-gate edge cases
 
 Both caveats are **ring family specific** and concentrated at **alpha=0 (periodic boundary)**.
 

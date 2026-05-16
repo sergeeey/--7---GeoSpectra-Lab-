@@ -1183,8 +1183,8 @@ validation.
 
 - Core operator correctness validated (Hermiticity, q=0 controls, reproducibility)
 - Full diagnostic completed: 6615/6615 cases
-- Independent audit completed with corrections applied
-- Targeted follow-up resolved caveat scope: ring/alpha=0 failures are small-lattice artifacts (vanish at s1_size≥64)
+- Independent within-project artifact audit completed with corrections applied
+- Targeted follow-up resolved caveat scope: ring/alpha=0 failures (51 total: 37 complete + 14 window-sensitive) are small-lattice artifacts (vanish at s1_size≥64)
 - Refined caveat: production guidance clear (s1_size≥64 for ring/alpha=0)
 - Total failure rate (after refinement): 0.0% at recommended s1_size≥64
 - Pytest suite: 203 passed, 1 warning (8 new tests for follow-up)

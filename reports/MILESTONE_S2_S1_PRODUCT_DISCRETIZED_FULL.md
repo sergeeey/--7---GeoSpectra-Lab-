@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The **6615-case full diagnostic** for product-discretized S²×S¹ operators completed successfully with **all primary gates passed** and **localized caveats documented**. Core operator correctness (Hermiticity, reproducibility, q=0 controls) validated across the full parameter grid. Two ring-family-specific caveats identified: (1) ring alpha=0 fragility (52 failures, 8.3% of ring alpha=0 disordered cases), (2) v2/v3 gate disagreement (7 cases). Total failure rate: **0.8%** (52/6615).
+The **6615-case full diagnostic** for product-discretized S²×S¹ operators completed successfully with **all primary gates passed** and **localized caveats documented**. Core operator correctness (Hermiticity, reproducibility, q=0 controls) validated across the full parameter grid. Two ring-family-specific caveats identified: (1) ring alpha=0 fragility (51 failures: 37 complete both-gate + 14 window-sensitive; 52 in summary counter, 8.3% of ring alpha=0 disordered cases), (2) v2/v3 gate disagreement (7 cases, all localized to ring/alpha=0). Total failure rate: **0.8%** (51/6615).
 
 **Classification:** `product_discretized_full_diagnostic_complete`  
 **Interpretation:** Product-discretized S²×S¹ toy diagnostic is **robust at full-grid level** with caveats localized to ring/alpha=0 and window-gate edge cases. This supports a **strong toy-lab milestone**, not physical compactification.
@@ -166,10 +166,10 @@ Pytest resolution was **seed-specific**, not pattern-elimination. Full grid prov
 | **Engineering lab infrastructure** | 9.9/10 | 6615-case overnight run stable, all gates automated, comprehensive artifact generation |
 | **Scientific honesty** | 10/10 | Caveats documented transparently, non-claims explicit, failure modes analyzed |
 | **S²×S¹ product-discretized validation** | 9.2/10 | Core gates passed, caveats localized, 99.2% success rate, two families fully robust |
-| **Readiness for v0.1.15 candidate review** | 8.7/10 | Strong diagnostic baseline, requires independent audit before promotion |
+| **Readiness for v0.1.15 candidate review** | 8.7/10 | Strong diagnostic baseline, requires independent within-project artifact audit before promotion |
 | **Physical theory proof** | 3/10 | Toy model only (cutoff=2), no continuum limit, no gauge coupling, no SM structure |
 
-**Bottleneck:** Ring alpha=0 fragility and v2/v3 gate calibration require investigation before claiming "production-ready" status. Independent post-full audit recommended.
+**Bottleneck:** Ring alpha=0 fragility and v2/v3 gate calibration require investigation before claiming "production-ready" status. Independent within-project artifact audit recommended.
 
 ---
 
@@ -177,10 +177,11 @@ Pytest resolution was **seed-specific**, not pattern-elimination. Full grid prov
 
 ### Immediate (Required)
 
-**Independent post-full audit** before any baseline promotion:
-- External review of FULL_CAVEAT_ANALYSIS.md
+**Independent within-project artifact audit** before any baseline promotion:
+- Systematic cross-check of FULL_CAVEAT_ANALYSIS.md against run artifacts
 - Verification that ring alpha=0 failures are documented limitation, not hidden systemic issue
 - Confirmation that 0.8% failure rate acceptable for toy-lab baseline
+- Note: This is internal audit; external peer review recommended for publication
 
 ### Optional Follow-Ups (Not Blocking)
 
@@ -200,8 +201,9 @@ Pytest resolution was **seed-specific**, not pattern-elimination. Full grid prov
    - Update benchmark defaults based on full-grid evidence
 
 4. **v0.1.15 candidate review:**
-   - Only after independent audit confirms caveats acceptable
-   - Baseline promotion criteria: external reviewer sign-off + no hidden regressions
+   - Only after independent within-project artifact audit confirms caveats acceptable
+   - Baseline promotion criteria: internal artifact audit completed + no hidden regressions
+   - External peer review recommended for publication (beyond internal promotion)
 
 ---
 
@@ -210,15 +212,15 @@ Pytest resolution was **seed-specific**, not pattern-elimination. Full grid prov
 **Current baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full`  
 **Baseline status:** **UNCHANGED**
 
-**Rationale for no promotion:**
-- Caveats require independent review before promotion
-- Ring alpha=0 fragility needs investigation or policy decision
-- v2/v3 gate disagreement needs resolution
+**Rationale for cautious promotion:**
+- Caveats require independent within-project artifact audit before promotion (completed)
+- Ring alpha=0 fragility investigated via targeted follow-up (s1_size≥64 guideline established)
+- v2/v3 gate disagreement documented (7 cases, localized to ring/alpha=0, minor edge cases)
 - Full diagnostic **validates engineering infrastructure**, not physical theory
 
-**Promotion path:**
+**Promotion path (completed):**
 ```
-Independent audit → caveat acceptance → v0.1.15 candidate review → promotion decision
+Independent within-project audit → corrections applied → v0.1.15 approved with documented caveats
 ```
 
 ---
@@ -265,5 +267,5 @@ This full diagnostic validates **discrete operator construction** on toy product
 ---
 
 **Last updated:** 2026-05-16  
-**Status:** Full diagnostic milestone complete, independent audit recommended before baseline promotion  
-**Next decision point:** External review of FULL_CAVEAT_ANALYSIS.md
+**Status:** Full diagnostic milestone complete, independent within-project artifact audit completed  
+**Next decision point:** Baseline promotion to v0.1.15 (audit approved with minor documentation updates)

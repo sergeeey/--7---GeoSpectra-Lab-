@@ -81,7 +81,7 @@ which scientific claims are explicitly not supported by the present evidence.
   memo: `reports/S2_S1_PRODUCT_DISCRETIZED_W4_DIAGNOSTIC.md`.
 - **Product-discretized FULL diagnostic** (2026-05-15): **6615/6615** cases
   completed, ~16h runtime. Core gates **passed** (q=0 false positives=0,
-  Hermiticity, reproducibility). Independent audit completed with corrections applied.
+  Hermiticity, reproducibility). Independent within-project artifact audit completed with corrections applied.
   **Ring/alpha=0 targeted follow-up** (2026-05-16): **1349 cases**, verdict=**SMALL_LATTICE_ARTIFACT**.
   **Refined caveat:** Ring/alpha=0 failures (51 total: 37 complete + 14 window-sensitive)
   occur **only at s1_size<64**. Targeted follow-up confirms: failures at s1_size≥64 = **0/252 = 0.0%**.
@@ -1130,7 +1130,7 @@ documentation-only).
      v3 should be primary gate for production validation.
   
   See detailed analysis: `reports/S2_S1_PRODUCT_DISCRETIZED_FULL_NOTE.md`,
-  `reports/FULL_CAVEAT_ANALYSIS.md`, and independent audit:
+  `reports/FULL_CAVEAT_ANALYSIS.md`, and independent within-project artifact audit:
   `reports/S2_S1_PRODUCT_DISCRETIZED_FULL_INDEPENDENT_AUDIT.md`.
 
 - **IPR smoke pre-validation** (2026-05-15): 144-case spatial localization smoke

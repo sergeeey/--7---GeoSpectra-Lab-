@@ -590,8 +590,9 @@ Impact on baseline:
 - Refined caveat: ring/alpha=0 failures vanish at s1_size≥64
 - Total failure rate (after refinement): 0.0% at recommended s1_size≥64
 - Pytest suite: **203 passed, 1 warning** (8 new tests for follow-up)
-- **Independent audit:** `reports/S2_S1_PRODUCT_DISCRETIZED_FULL_INDEPENDENT_AUDIT.md`
+- **Independent within-project artifact audit:** `reports/S2_S1_PRODUCT_DISCRETIZED_FULL_INDEPENDENT_AUDIT.md`
   (verdict: `confirmed_with_corrections_needed`, corrections applied 2026-05-16)
+  Note: Internal cross-validation audit, not external peer review
 - **Release notes:** `reports/RELEASE_NOTES_v0.1.15.md`
 
 Recommendations (COMPLETED):

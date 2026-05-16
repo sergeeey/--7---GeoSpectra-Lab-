@@ -1,9 +1,10 @@
-# Independent Post-Full Audit — S² × S¹ Product-Discretized Full Diagnostic
+# Independent Within-Project Audit — S² × S¹ Product-Discretized Full Diagnostic
 
 **Audit Date:** 2026-05-16  
 **Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full` (unchanged)  
 **Run:** `reports/RUNS/20260515-201150_s2_s1_product_discretized_full/`  
-**Auditor:** Independent verification (systematic artifact check)
+**Auditor:** Independent within-project artifact audit (systematic artifact cross-check)  
+**Note:** This is an internal cross-validation audit, not an external peer review.
 
 **Verdict:** `confirmed_with_corrections_needed`
 
