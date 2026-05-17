@@ -1,0 +1,49 @@
+{
+  "title": "A Falsification-First Validation Harness for Discretized Spectral Operators on Compact Product Manifolds (v0.1.16 Pre-Review Draft)",
+  "description": "GeoSpectra Falsification Ladder methodology paper. Presents a falsification-first validation workflow for discretized spectral operators on compact toy manifolds, validated through the v0.1.15 case study (S²×S¹ product-discretized full diagnostic, 6615+6615+1349 cases). Ring/alpha=0 caveat resolved via targeted follow-up (s1_size≥64 empirical guideline). Pre-review manuscript ready for external domain expert feedback (Track A: lattice field theory, differential geometry, numerical analysis). This is a METHODOLOGY paper, NOT a physical compactification proof. All validation on finite-lattice toy operators (s1_size≤96). Eight scientific non-claims explicitly stated: no continuum compactification, no S⁶/S³×S⁶, no Standard Model, no physical chirality, no Witten/Lichnerowicz bypass, no physical extra dimensions, no hierarchy solution, no observable predictions. Baseline: v0.1.15-s2-s1-product-discretized-full (computational validation completed 2026-05-16).",
+  "creators": [
+    {
+      "name": "Boyko, Sergey",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "access_right": "open",
+  "license": "CC-BY-4.0",
+  "keywords": [
+    "falsification-first validation",
+    "spectral operators",
+    "compact manifolds",
+    "Anderson localization",
+    "Dirac operators",
+    "finite-lattice diagnostics",
+    "methodology paper",
+    "toy model validation",
+    "product manifolds",
+    "lattice field theory",
+    "differential geometry",
+    "numerical analysis",
+    "progressive profiles",
+    "independent audit",
+    "caveat handling"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/sergeeey/--7---GeoSpectra-Lab-.git",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Claude Sonnet 4.5 (Anthropic)",
+      "type": "Other",
+      "affiliation": "Anthropic"
+    }
+  ],
+  "upload_type": "publication",
+  "publication_type": "workingpaper",
+  "version": "v0.1.16-methodology-review-draft",
+  "publication_date": "2026-05-17",
+  "language": "eng",
+  "notes": "Pre-review methodology manuscript. External domain expert peer review has not yet been performed. Do not cite as peer-reviewed work. This work validates a falsification-first workflow for discretized toy operators on finite lattices. It does NOT prove continuum compactification, Standard Model derivation, physical chirality, or S⁶/Calabi-Yau validation. Baseline: v0.1.15-s2-s1-product-discretized-full (computational validation, promoted 2026-05-16)."
+}

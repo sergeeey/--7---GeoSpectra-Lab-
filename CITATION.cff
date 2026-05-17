@@ -1,0 +1,46 @@
+# Citation File Format (CFF) for GeoSpectra Lab
+# Specification: https://citation-file-format.github.io/
+
+cff-version: 1.2.0
+title: >-
+  A Falsification-First Validation Harness for Discretized Spectral
+  Operators on Compact Product Manifolds
+message: >-
+  If you use this methodology or reference this work, please cite it
+  using the metadata from this file.
+type: software
+authors:
+  - family-names: Boyko
+    given-names: Sergey
+    email: sergeikuch80@gmail.com
+repository-code: 'https://github.com/sergeeey/--7---GeoSpectra-Lab-.git'
+abstract: >-
+  GeoSpectra Falsification Ladder: a falsification-first validation
+  workflow for discretized spectral operators on compact toy manifolds.
+  The v0.1.16 methodology manuscript presents a 9-rung validation harness
+  (controls, progressive profiles, independent audit, targeted
+  follow-up, release integrity) validated through the v0.1.15 case study
+  (S²×S¹ product-discretized full diagnostic, 6615+6615+1349 cases).
+  Ring/alpha=0 caveat resolved via targeted follow-up (s1_size≥64
+  empirical guideline). This is a methodology paper, NOT a physical
+  compactification proof. All validation on finite-lattice toy operators
+  (s1_size≤96). Eight scientific non-claims explicitly stated: no
+  continuum compactification, no S⁶/S³×S⁶, no Standard Model, no
+  physical chirality, no Witten/Lichnerowicz bypass, no physical extra
+  dimensions, no hierarchy solution, no observable predictions.
+keywords:
+  - falsification-first validation
+  - spectral operators
+  - compact manifolds
+  - Anderson localization
+  - Dirac operators
+  - finite-lattice diagnostics
+  - methodology paper
+  - toy model validation
+  - product manifolds
+  - lattice field theory
+  - differential geometry
+  - numerical analysis
+license: CC-BY-4.0
+version: v0.1.16-methodology-review-draft
+date-released: '2026-05-17'
