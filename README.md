@@ -1,5 +1,7 @@
 # GeoSpectra Lab / Covariant Compactification Toy Lab
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20252651.svg)](https://doi.org/10.5281/zenodo.20252651)
+
 ## Purpose
 
 GeoSpectra Lab is a reproducible Python MVP for testing toy mechanisms related
