@@ -113,7 +113,7 @@ which scientific claims are explicitly not supported by the present evidence.
 
 | Check | Result |
 | --- | --- |
-| `pytest -q` | **195 passed, 1 warning** in **392.95s** (~6m33s; confirmed 2026-05-15; ring window-selection sensitivity resolved) |
+| `pytest -q` | **195 passed, 1 warning** in **392.95s** (~6m33s; snapshot 2026-05-15; **latest after v0.1.15: 203 passed, 1 warning**) |
 
 ### Radion Stabilization
 
@@ -1072,8 +1072,9 @@ Analytic spectrum unit tests (`tests/test_analytic_spectra.py`):
 - Comments in tests state the intent: avoid **circular validation** against
   production helpers under test. Production code unchanged.
 
-Latest documented suite status: `pytest -q` -> **195 passed, 1 warning in 392.95s**
-(~6m33s; confirmed full suite 2026-05-15; ring window-selection sensitivity resolved).
+Test suite status at time of this section (2026-05-15): `pytest -q` -> **195 passed, 1 warning in 392.95s**
+(~6m33s; ring window-selection sensitivity resolved).  
+*Note: Latest suite status after v0.1.15 promotion: **203 passed, 1 warning** (see RELEASE_NOTES_v0.1.15.md).*
 
 Non-claims:
 

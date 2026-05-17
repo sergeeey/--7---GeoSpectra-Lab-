@@ -1,8 +1,10 @@
 # Full Diagnostic Caveat Analysis (6615-case run)
 
+> **Historical document:** This analysis reflects validation state as of 2026-05-15, before v0.1.15 baseline promotion. **Current baseline:** v0.1.15-s2-s1-product-discretized-full (promoted 2026-05-16).
+
 **Run:** `20260515-201150_s2_s1_product_discretized_full`  
 **Date:** 2026-05-15  
-**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full`
+**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full` *(pre-promotion)*
 
 ---
 

@@ -1,8 +1,10 @@
 # Product-discretized S²×S¹ — full diagnostic (6615 cases)
 
+> **Historical document:** This note reflects validation state as of 2026-05-15, before v0.1.15 baseline promotion. **Current baseline:** v0.1.15-s2-s1-product-discretized-full (promoted 2026-05-16).
+
 **Scientific non-claims:** This does NOT prove continuum compactification; does NOT validate `S⁶` or `S³×S⁶`; does NOT derive the Standard Model; does NOT prove physical chirality; does NOT bypass Witten/Lichnerowicz theorems.
 
-**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full`  
+**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full` *(pre-promotion)*  
 **Operator family:** `product_discretized_kronecker_sum_D2_plus_P1`  
 **Profile:** `full` (6615 cases across 3 S1 families × 7 monopole charges × parameter grid)  
 **Run duration:** ~16 hours (2026-05-15)

@@ -1,6 +1,8 @@
 # Milestone — S² × S¹ Product-Discretized Full Diagnostic
 
-**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full`  
+> **Historical document:** This milestone reflects validation state as of 2026-05-15, before v0.1.15 baseline promotion. **Current baseline:** v0.1.15-s2-s1-product-discretized-full (promoted 2026-05-16).
+
+**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full` *(pre-promotion)*  
 **Date:** 2026-05-15 (run completion), 2026-05-16 (milestone documentation)  
 **Verdict:** `PASS_WITH_LOCAL_CAVEATS`
 

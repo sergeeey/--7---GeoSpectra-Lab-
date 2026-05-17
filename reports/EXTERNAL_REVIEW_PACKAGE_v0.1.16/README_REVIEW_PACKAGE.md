@@ -53,7 +53,7 @@ This package contains materials for **external domain expert peer review** of th
 
 **Branch:** main  
 **Tag:** v0.1.15-s2-s1-product-discretized-full  
-**Latest commit:** fee661a — Add v0.1.16 compressed methodology manuscript
+**Latest commit:** da7c15a — Add v0.1.16 external review package
 
 **Manuscript path in repository:**  
 `reports/METHODOLOGY_PAPER_COMPRESSED_v0.1.16.md`

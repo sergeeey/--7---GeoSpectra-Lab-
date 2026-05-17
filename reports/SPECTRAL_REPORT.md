@@ -147,8 +147,9 @@ production formulas they aim to guard), several cases now compare outputs to
 **hardcoded reference tables** with explicit comments in the test file.
 Production implementation was not changed for this hardening pass.
 
-Latest documented suite status: `pytest -q` -> **187 passed in 1178.60s**
-(~19m39s; full run confirmed 2026-05-14 after product-discretized guarded-runner wiring).
+Test suite status at time of this section (2026-05-14): `pytest -q` -> **187 passed in 1178.60s**
+(~19m39s; full run confirmed after product-discretized guarded-runner wiring).  
+*Note: Latest suite status after v0.1.15 promotion: **203 passed, 1 warning** (see RELEASE_NOTES_v0.1.15.md).*
 
 Non-claims:
 

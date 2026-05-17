@@ -1,7 +1,9 @@
 # Independent Within-Project Audit — S² × S¹ Product-Discretized Full Diagnostic
 
+> **Historical document:** This audit reflects validation state as of 2026-05-16, before v0.1.15 baseline promotion. **Current baseline:** v0.1.15-s2-s1-product-discretized-full (promoted 2026-05-16 after this audit).
+
 **Audit Date:** 2026-05-16  
-**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full` (unchanged)  
+**Baseline:** `v0.1.14-mvp-s2-s1-discretization-v2-full` *(pre-promotion, unchanged at audit time)*  
 **Run:** `reports/RUNS/20260515-201150_s2_s1_product_discretized_full/`  
 **Auditor:** Independent within-project artifact audit (systematic artifact cross-check)  
 **Note:** This is an internal cross-validation audit, not an external peer review.

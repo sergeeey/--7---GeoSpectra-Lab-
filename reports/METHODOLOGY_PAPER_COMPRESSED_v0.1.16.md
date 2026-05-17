@@ -44,7 +44,7 @@ Full Diagnostic → Reproducibility → Independent Audit → Ring/alpha=0 Follo
 Hermiticity, Shape, Reproducibility, Positive Control (W=0), Negative Control (q=0) — all 6615/6615 passed, 0 false positives
 
 **Figure 7. Ring/alpha=0 Lattice-Size Scaling**  
-Failure rate vs s1_size: 19.8% (s1_size=8) → 0.0% (s1_size≥64). Convergence confirmed.
+Failure rate vs s1_size: 19.8% (s1_size=8) → 0.0% (s1_size≥64). Finite-lattice convergence confirmed.
 
 **Table 3. Scientific Non-Claims (8 boundaries)**  
 No continuum compactification, no S⁶/S³×S⁶, no Standard Model, no physical chirality, no Witten/Lichnerowicz bypass, no physical extra dimensions, no hierarchy solution, no observable predictions.
@@ -554,13 +554,13 @@ Lattice-size scaling analysis (Figure 7):
 | s1_size | Total | Failures | Failure Rate (%) | Interpretation |
 |---------|-------|----------|------------------|----------------|
 | <64 | 630 | 51 | 8.1% | Small-lattice artifact zone |
-| **64** | **126** | **0** | **0.0%** ✅ | **Converged** |
-| **96** | **126** | **0** | **0.0%** ✅ | **Converged** |
-| **≥64 aggregate** | **252** | **0** | **0.0%** ✅ | **Convergence confirmed** |
+| **64** | **126** | **0** | **0.0%** ✅ | **Converged (finite-lattice)** |
+| **96** | **126** | **0** | **0.0%** ✅ | **Converged (finite-lattice)** |
+| **≥64 aggregate** | **252** | **0** | **0.0%** ✅ | **Finite-lattice convergence confirmed** |
 
 **Figure 7. Ring/alpha=0 Lattice-Size Scaling**
 
-![Ring/alpha=0 Lattice-Size Scaling](figures/F7_lattice_size_scaling.png)
+![Ring/alpha=0 Lattice-Size Scaling](FIGURES/F7_lattice_size_scaling.png)
 
 *Ring discretization at periodic boundary condition (alpha=0.0): failure rate drops from 19.8% (s1_size=8) to 0.0% (s1_size≥64). Empirical convergence on finite lattices—NOT continuum extrapolation. Production guideline: s1_size≥64 for ring/alpha=0 to ensure numerical stability in discretized operators on finite grids.*
 
@@ -598,7 +598,7 @@ Targeted follow-up also tested reference families at extended grid (control: ver
 |--------|-------|----------|--------------|--------|
 | spectral_circle | ~120 | 0 | 0.0% | Robust at s1_size≥64 ✅ |
 | wilson_ring | ~120 | 0 | 0.0% | Robust at s1_size≥64 ✅ |
-| ring (alpha=0) | 252 | 0 | 0.0% | **Converged at s1_size≥64** ✅ |
+| ring (alpha=0) | 252 | 0 | 0.0% | **Finite-lattice convergence at s1_size≥64** ✅ |
 
 **Conclusion:** Ring/alpha=0 at s1_size≥64 is **as robust as spectral_circle and wilson_ring**. Small-lattice artifact resolved.
 
