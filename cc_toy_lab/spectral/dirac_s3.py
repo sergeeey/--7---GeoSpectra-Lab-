@@ -57,35 +57,33 @@ def build_s3_dirac_operator(
     if radius <= 0:
         raise ValueError("radius must be positive")
 
-    # Calculate total dimension: sum_{j=0}^{j_max/2} (2j+1)²
-    # Convention: j_max=N → highest j = N/2
-    # j_max=1 → j in [0, 0.5] → dim = 1 + 4 = 5
-    # j = k * 0.5 for k in [0, 1, 2, ..., j_max]
-    j_values = [k * 0.5 for k in range(0, int(j_max) + 1)]
-    dimensions = [int((2 * j + 1) ** 2) for j in j_values]  # Force int for dimension
+    # Calculate total dimension using Dirac eigenspace degeneracy
+    # Theory (arXiv:1103.4097): degeneracy per level n is 2(n+1)²
+    # n = 0, 1, 2, ..., j_max
+    # This ensures EVEN dimensions for proper ± eigenvalue symmetry
+    n_values = list(range(0, int(j_max) + 1))
+    dimensions = [2 * (n + 1) ** 2 for n in n_values]  # Degeneracy = 2(n+1)²
     total_dim = int(sum(dimensions))
 
-    # Gate 1 prototype: construct Hermitian matrix with block structure
-    # Each j-block has dimension (2j+1)²
-    # Eigenvalues: simplified ±(j + 0.5) / radius pattern
+    # Construct Hermitian matrix with block structure
+    # Each n-level block has dimension 2(n+1)² (always even → symmetric ± eigenvalues)
+    # Eigenvalue formula: λ = ±(n + 3/2) / R (arXiv:1103.4097)
     operator = np.zeros((total_dim, total_dim), dtype=complex)
 
     offset = 0
-    for idx, (j, dim_j) in enumerate(zip(j_values, dimensions, strict=False)):
-        n = idx  # Level index: 0, 1, 2, ... (arXiv:1103.4097 notation)
-        # Full eigenvalue formula: λ = ±(n + 3/2) / R
-        # n=0: λ = ±1.5/R, n=1: λ = ±2.5/R, n=2: λ = ±3.5/R, ...
+    for n, dim_n in zip(n_values, dimensions, strict=False):
+        # Eigenvalues for level n
         eigenvalue_pos = (n + 1.5) / radius
         eigenvalue_neg = -(n + 1.5) / radius
 
-        # Half the block gets positive eigenvalue, half gets negative
-        half_dim = dim_j // 2
+        # Split block exactly in half (dim_n always even)
+        half_dim = dim_n // 2
         for i in range(half_dim):
             operator[offset + i, offset + i] = eigenvalue_pos
-        for i in range(half_dim, dim_j):
+        for i in range(half_dim, dim_n):
             operator[offset + i, offset + i] = eigenvalue_neg
 
-        offset += dim_j
+        offset += dim_n
 
     # Hermitize (force exact Hermiticity numerically)
     operator = 0.5 * (operator + operator.conj().T)
@@ -97,21 +95,20 @@ def build_s3_dirac_operator(
 
 
 def s3_dimension(j_max: int) -> int:
-    """Calculate total Hilbert space dimension for S³ truncated at j_max.
+    """Calculate total Hilbert space dimension for S³ Dirac eigenspaces up to level j_max.
 
-    j_max=1 means j in [0, 0.5, 1], so dimension = 1 + 4 + 9 = 14.
-    Wait, that's wrong. Let me recalculate:
-    - j_max=1 should mean max j is 1, so j in {0, 1/2, 1}
-    - But test expects s3_dimension(1) == 5...
+    Uses arXiv:1103.4097 degeneracy formula: dim(E_n) = 2(n+1)² per level n.
 
-    Test comment says: "j=0,1/2: 1 + (2*0.5+1)² = 1 + 4 = 5"
-    So j_max=1 means "include j up to 1/2", NOT "up to 1".
+    Args:
+        j_max: Maximum level index n (0, 1, 2, ..., j_max)
 
-    Fix: j_max=N means include j values [0, 1/2, 1, ..., N/2]
-    So for j_max=1: j in [0, 1/2] → dim = 1 + 4 = 5
-    For j_max=2: j in [0, 1/2, 1] → dim = 1 + 4 + 9 = 14
+    Returns:
+        Total dimension: sum_{n=0}^{j_max} 2(n+1)²
+
+    Examples:
+        j_max=0: n=0 → dim = 2(1)² = 2
+        j_max=1: n=0,1 → dim = 2(1)² + 2(2)² = 2 + 8 = 10
+        j_max=2: n=0,1,2 → dim = 2 + 8 + 2(9) = 2 + 8 + 18 = 28
     """
-    # j_max=N means max j value is N/2
-    # j = k * 0.5 for k in [0, 1, 2, ..., j_max]
-    j_values = [k * 0.5 for k in range(0, int(j_max) + 1)]
-    return int(sum((2 * j + 1) ** 2 for j in j_values))
+    n_values = range(0, int(j_max) + 1)
+    return int(sum(2 * (n + 1) ** 2 for n in n_values))

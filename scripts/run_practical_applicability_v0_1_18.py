@@ -16,8 +16,8 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from cc_toy_lab.spectral.dirac_monopole_s2 import build_dirac_monopole_operator
-from cc_toy_lab.spectral.s1_discretizations import build_s1_operator
+from cc_toy_lab.spectral.dirac_monopole_s2 import build_dirac_monopole_operator  # noqa: E402
+from cc_toy_lab.spectral.s1_discretizations import build_s1_operator  # noqa: E402
 
 RUN_DIR = PROJECT_ROOT / "reports" / "RUNS" / "v0_1_18_practical_applicability"
 REPORTS_DIR = PROJECT_ROOT / "reports"
