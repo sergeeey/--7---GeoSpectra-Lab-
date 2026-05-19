@@ -27,11 +27,13 @@
 |-----|------|------|--------|----------|
 | 1 | 20 мая AM | Full SU(2) eigenvalues research + implementation | ✅ DONE | 3 hours |
 | 1 | 20 мая PM | Smoke test suite creation | ✅ DONE | 2 hours |
-| 2 | 20 мая late | 100-case smoke test execution | 🔄 RUNNING | ~30 min |
-| 3-4 | 21-22 мая | Rungs 1-4: positive/negative controls + baselines | ⏳ TODO | 2 days |
-| 5 | 24 мая | Gate 2 checkpoint decision | ⏳ TODO | 3 hours |
+| 2 | 20 мая late | 100-case smoke test execution | ✅ DONE | 36 sec (95% pass) |
+| 3 | 20 мая night | Eigenvalue symmetry fix (degeneracy 2(n+1)²) | ✅ DONE | 3 hours |
+| 3 | 20 мая night | Positive control: eigenvalues vs theory | ✅ DONE | 1 hour |
+| 3 | 20 мая night | Negative control + baseline metrics | ✅ DONE | 30 min |
+| 4 | 22 мая | Gate 2 checkpoint decision | ⏳ TODO | 3 hours |
 
-**Total so far:** ~5 hours (Day 1-2 partial)
+**Total so far:** ~9.5 hours (Day 1-3)
 
 ---
 
@@ -262,9 +264,103 @@ eigenvalue_neg = -(n + 1.5) / radius  # λ = -(n + 3/2) / R
 
 ---
 
-**Status:** GATE 2 IN PROGRESS (Day 1-2 complete)  
-**Next milestone:** Smoke test results (20 мая late) → Day 3 controls (21 мая)  
-**Checkpoint:** 24 мая Gate 2 decision → CAMP 27 мая
+## Day 3 Results — Eigenvalue Validation (20 мая night)
+
+### Critical Fix: Eigenvalue Symmetry Issue
+
+**Problem discovered:** Initial implementation used j-block structure (2j+1)² → ODD dimensions → broken ± symmetry.
+- j_max=0: dim=1 → only -1.5, missing +1.5
+- j_max=1: dim=5 → missing +1.5
+- j_max=2: dim=14 → missing +1.5
+
+**Root cause:** Integer division `dim // 2` for odd dimensions gave asymmetric positive/negative split.
+
+**Solution:** Implemented correct degeneracy formula from arXiv:1103.4097:
+- Old: (2j+1)² per j-block (SU(2) representation dimension)
+- New: 2(n+1)² per n-level (Dirac eigenspace degeneracy)
+- Result: ALWAYS EVEN dimensions → symmetric ± eigenvalues
+
+**Impact:**
+- s3_dimension(0): 1 → 2
+- s3_dimension(1): 5 → 10
+- s3_dimension(2): 14 → 28
+- Smoke test runtime: 36s → 262s (7.3× slower, larger matrices)
+
+### Positive Control Results (✅ 4/4 PASSED)
+
+**Test:** S³ Dirac eigenvalues vs analytical spectrum (arXiv:1103.4097)
+
+| j_max | Expected eigenvalues | Actual (unique) | Status |
+|-------|---------------------|-----------------|--------|
+| 0 | ±1.5/R | ±1.5 | ✅ PASS |
+| 1 | ±1.5, ±2.5 | ±1.5, ±2.5 | ✅ PASS |
+| 2 | ±1.5, ±2.5, ±3.5 | ±1.5, ±2.5, ±3.5 | ✅ PASS |
+| 2 (R=2) | ±0.75, ±1.25, ±1.75 | ±0.75, ±1.25, ±1.75 | ✅ PASS |
+
+**Tolerance:** 1e-6 (exact match within numerical precision)
+
+**Validated:**
+- Formula λ = ±(n + 3/2) / R correct
+- Radius scaling 1/R verified
+- Symmetry ± present for all levels
+
+### Negative Control Results (✅ 1/1 PASSED)
+
+**Test:** Random Hermitian matrix should NOT have Dirac spectral structure
+
+**Result:**
+- Random matrix: eigenvalue spacing std = 0.487 (variable)
+- S³ Dirac: eigenvalue spacing std ≈ 0 (uniform 1.0 spacing)
+- Threshold: std > 0.1 → NOT Dirac-like ✅
+
+**Validated:** Random Hermitian clearly distinguishable from Dirac operator.
+
+### Baseline Metrics Results (✅ 3/3 PASSED)
+
+| Metric | Expected | Actual | Status |
+|--------|----------|--------|--------|
+| **Spectral gap** | 1.0 (uniform spacing) | 1.0 | ✅ PASS |
+| **Kernel count** | 0 (S³ trivial topology) | 0 | ✅ PASS |
+| **Eigenvalue symmetry** | ∀λ>0: ∃-λ | Verified | ✅ PASS |
+
+**Key findings:**
+- Gap between unique levels = 1.0 (consistent with λ_n - λ_{n-1} = 1.0)
+- No zero modes (S³ has trivial spinor bundle, no monopole charge)
+- Perfect ± symmetry after degeneracy fix
+
+### Post-Fix Validation
+
+**Hermiticity tests:** 10/10 PASSED (no regression)
+**Smoke test:** PASSED (262s, dimensions doubled but structure preserved)
+
+**Verified:** Degeneracy fix strengthened implementation without breaking existing validations.
+
+---
+
+## Day 3 Summary
+
+**Completed:**
+- ✅ Positive control: eigenvalues match arXiv:1103.4097 theory
+- ✅ Negative control: random matrix fails structure tests
+- ✅ Baseline metrics: gap, kernel, symmetry verified
+- ✅ Critical bug fixed: eigenvalue symmetry restored via correct degeneracy
+
+**Gate 2 Rungs validated:**
+- Rung 0 (Hermiticity): ✅ 10/10 tests
+- Rung 1 (Positive control): ✅ 4/4 eigenvalue tests
+- Rung 2 (Negative control): ✅ 1/1 structure test
+- Rung 3 (Baseline): ✅ 3/3 metrics tests
+- Rung 4 (Smoke test): ✅ 95/100 cases (wilson_ring caveat)
+
+**Status:** Day 3 COMPLETE ahead of schedule (night of 20 мая vs planned 21-22 мая).
+
+**Next:** Gate 2 checkpoint decision (22 мая) → Tom message (23 мая) → CAMP (27 мая).
+
+---
+
+**Status:** GATE 2 Day 3 COMPLETE (controls validated)  
+**Next milestone:** Gate 2 checkpoint decision (22 мая)  
+**Checkpoint:** Tom message 23 мая → CAMP 27 мая
 
 ---
 
