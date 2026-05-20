@@ -51,6 +51,7 @@ def build_s3_dirac_operator(
 
     References:
         arXiv:1103.4097 "Eigenspaces of the Spin Dirac operator over S³"
+        Page 15, equation (6.4): eigenvalues k+1/2 and -(k+3/2) for k ≥ 1
     """
     if j_max < 0:
         raise ValueError("j_max must be >= 0")
@@ -58,32 +59,39 @@ def build_s3_dirac_operator(
         raise ValueError("radius must be positive")
 
     # Calculate total dimension using Dirac eigenspace degeneracy
-    # Theory (arXiv:1103.4097): degeneracy per level n is 2(n+1)²
-    # n = 0, 1, 2, ..., j_max
-    # This ensures EVEN dimensions for proper ± eigenvalue symmetry
-    n_values = list(range(0, int(j_max) + 1))
-    dimensions = [2 * (n + 1) ** 2 for n in n_values]  # Degeneracy = 2(n+1)²
+    # Theory (arXiv:1103.4097, page 15): for each level k ≥ 1:
+    #   - Positive eigenvalue λ₊ = +(k + 1/2) / R, degeneracy k(k+1)
+    #   - Negative eigenvalue λ₋ = -(k + 3/2) / R, degeneracy (k+2)(k+1)
+    #   - Total per level: k(k+1) + (k+2)(k+1) = 2(k+1)²
+    # Mapping: k = j_max+1 levels total (k = 1, 2, ..., j_max+1)
+    k_values = list(range(1, int(j_max) + 2))  # k starts from 1 in paper
+    dimensions = [2 * (k + 1) ** 2 for k in k_values]  # Total degeneracy = 2(k+1)²
+    degeneracies_pos = [k * (k + 1) for k in k_values]  # Positive branch degeneracy
+    degeneracies_neg = [(k + 2) * (k + 1) for k in k_values]  # Negative branch degeneracy
     total_dim = int(sum(dimensions))
 
-    # Construct Hermitian matrix with block structure
-    # Each n-level block has dimension 2(n+1)² (always even → symmetric ± eigenvalues)
-    # Eigenvalue formula: λ = ±(n + 3/2) / R (arXiv:1103.4097)
+    # Construct Hermitian matrix with asymmetric eigenvalue structure
+    # CRITICAL: eigenvalues are NOT symmetric (|λ₊| ≠ |λ₋|)
+    # Paper gives: λ₊ = +(k+1/2)/R, λ₋ = -(k+3/2)/R (asymmetric!)
     operator = np.zeros((total_dim, total_dim), dtype=complex)
 
     offset = 0
-    for n, dim_n in zip(n_values, dimensions, strict=False):
-        # Eigenvalues for level n
-        eigenvalue_pos = (n + 1.5) / radius
-        eigenvalue_neg = -(n + 1.5) / radius
+    for k, dim_k, deg_pos, deg_neg in zip(
+        k_values, dimensions, degeneracies_pos, degeneracies_neg, strict=False
+    ):
+        # Eigenvalues for level k (arXiv:1103.4097 page 15)
+        eigenvalue_pos = (k + 0.5) / radius  # +(k + 1/2) / R
+        eigenvalue_neg = -(k + 1.5) / radius  # -(k + 3/2) / R
 
-        # Split block exactly in half (dim_n always even)
-        half_dim = dim_n // 2
-        for i in range(half_dim):
+        # Positive eigenspace: deg_pos = k(k+1) states
+        for i in range(deg_pos):
             operator[offset + i, offset + i] = eigenvalue_pos
-        for i in range(half_dim, dim_n):
+
+        # Negative eigenspace: deg_neg = (k+2)(k+1) states
+        for i in range(deg_pos, dim_k):
             operator[offset + i, offset + i] = eigenvalue_neg
 
-        offset += dim_n
+        offset += dim_k
 
     # Hermitize (force exact Hermiticity numerically)
     operator = 0.5 * (operator + operator.conj().T)
@@ -97,18 +105,18 @@ def build_s3_dirac_operator(
 def s3_dimension(j_max: int) -> int:
     """Calculate total Hilbert space dimension for S³ Dirac eigenspaces up to level j_max.
 
-    Uses arXiv:1103.4097 degeneracy formula: dim(E_n) = 2(n+1)² per level n.
+    Uses arXiv:1103.4097 degeneracy formula: 2(k+1)² per level k ≥ 1.
 
     Args:
-        j_max: Maximum level index n (0, 1, 2, ..., j_max)
+        j_max: Maximum level parameter (determines k_max = j_max+1)
 
     Returns:
-        Total dimension: sum_{n=0}^{j_max} 2(n+1)²
+        Total dimension: sum_{k=1}^{j_max+1} 2(k+1)²
 
     Examples:
-        j_max=0: n=0 → dim = 2(1)² = 2
-        j_max=1: n=0,1 → dim = 2(1)² + 2(2)² = 2 + 8 = 10
-        j_max=2: n=0,1,2 → dim = 2 + 8 + 2(9) = 2 + 8 + 18 = 28
+        j_max=0: k=1 → dim = 2(1+1)² = 8
+        j_max=1: k=1,2 → dim = 8 + 2(2+1)² = 8 + 18 = 26
+        j_max=2: k=1,2,3 → dim = 8 + 18 + 2(3+1)² = 8 + 18 + 32 = 58
     """
-    n_values = range(0, int(j_max) + 1)
-    return int(sum(2 * (n + 1) ** 2 for n in n_values))
+    k_values = range(1, int(j_max) + 2)  # k = 1, 2, ..., j_max+1
+    return int(sum(2 * (k + 1) ** 2 for k in k_values))

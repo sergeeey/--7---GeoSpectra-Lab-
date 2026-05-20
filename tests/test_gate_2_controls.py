@@ -27,7 +27,7 @@ class TestPositiveControl:
     """Positive control: S³ Dirac eigenvalues match analytical theory."""
 
     def test_eigenvalues_vs_theory_j0(self):
-        """j_max=0: expect λ = ±1.5/R (n=0 only)."""
+        """j_max=0 → k=1: expect λ = +1.5, -2.5 (arXiv:1103.4097 page 15)."""
         j_max = 0
         radius = 1.0
 
@@ -37,8 +37,9 @@ class TestPositiveControl:
         # Extract eigenvalues
         eigenvalues = np.linalg.eigvalsh(d_s3)
 
-        # Expected: n=0 → λ = ±(0 + 3/2) / 1.0 = ±1.5
-        expected = np.array([-1.5, 1.5])
+        # Expected (arXiv:1103.4097 page 15): k=1 → λ₊ = +(1+1/2)/R, λ₋ = -(1+3/2)/R
+        # λ₊ = +1.5, λ₋ = -2.5 (ASYMMETRIC: |1.5| ≠ |2.5|)
+        expected = np.array([-2.5, 1.5])
 
         # Get unique eigenvalues (ignoring degeneracy)
         actual_unique = np.unique(np.round(eigenvalues, 6))
@@ -47,30 +48,30 @@ class TestPositiveControl:
         np.testing.assert_allclose(actual_unique, expected, atol=1e-6)
 
     def test_eigenvalues_vs_theory_j1(self):
-        """j_max=1: expect λ = ±1.5, ±2.5 (n=0,1)."""
+        """j_max=1 → k=1,2: expect λ = {+1.5, -2.5, +2.5, -3.5}."""
         j_max = 1
         radius = 1.0
 
         d_s3, _ = build_s3_dirac_operator(j_max=j_max, radius=radius)
         eigenvalues = np.linalg.eigvalsh(d_s3)
 
-        # Expected: n=0,1 → λ = ±1.5, ±2.5
-        expected = np.array([-2.5, -1.5, 1.5, 2.5])
+        # Expected: k=1 → {+1.5, -2.5}, k=2 → {+2.5, -3.5}
+        expected = np.array([-3.5, -2.5, 1.5, 2.5])
 
         actual_unique = np.unique(np.round(eigenvalues, 6))
 
         np.testing.assert_allclose(actual_unique, expected, atol=1e-6)
 
     def test_eigenvalues_vs_theory_j2(self):
-        """j_max=2: expect λ = ±1.5, ±2.5, ±3.5 (n=0,1,2)."""
+        """j_max=2 → k=1,2,3: expect λ = {+1.5, -2.5, +2.5, -3.5, +3.5, -4.5}."""
         j_max = 2
         radius = 1.0
 
         d_s3, _ = build_s3_dirac_operator(j_max=j_max, radius=radius)
         eigenvalues = np.linalg.eigvalsh(d_s3)
 
-        # Expected: n=0,1,2 → λ = ±1.5, ±2.5, ±3.5
-        expected = np.array([-3.5, -2.5, -1.5, 1.5, 2.5, 3.5])
+        # Expected: k=1 → {+1.5, -2.5}, k=2 → {+2.5, -3.5}, k=3 → {+3.5, -4.5}
+        expected = np.array([-4.5, -3.5, -2.5, 1.5, 2.5, 3.5])
 
         actual_unique = np.unique(np.round(eigenvalues, 6))
 
@@ -84,8 +85,8 @@ class TestPositiveControl:
         d_s3, _ = build_s3_dirac_operator(j_max=j_max, radius=radius)
         eigenvalues = np.linalg.eigvalsh(d_s3)
 
-        # Expected: λ = ±(n + 3/2) / 2.0
-        expected = np.array([-3.5, -2.5, -1.5, 1.5, 2.5, 3.5]) / 2.0
+        # Expected: k=1,2,3 eigenvalues divided by 2.0
+        expected = np.array([-4.5, -3.5, -2.5, 1.5, 2.5, 3.5]) / 2.0
 
         actual_unique = np.unique(np.round(eigenvalues, 6))
 
@@ -176,8 +177,8 @@ class TestBaselineMetrics:
         # S³ trivial spinor bundle → no zero modes
         assert kernel_count == 0, f"Expected 0 zero modes (S³ trivial), got {kernel_count}"
 
-    def test_eigenvalue_symmetry(self):
-        """Eigenvalues symmetric around zero (Dirac property)."""
+    def test_eigenvalue_pairing(self):
+        """Eigenvalues come in pairs per k-level (arXiv:1103.4097 structure)."""
         j_max = 2
         radius = 1.0
 
@@ -187,14 +188,23 @@ class TestBaselineMetrics:
         # Get unique eigenvalues
         unique_eigs = np.unique(np.round(eigenvalues, 6))
 
-        # Check: for every λ > 0, there exists -λ
+        # For j_max=2: k=1,2,3 → 6 unique eigenvalues (2 per k-level)
+        # IMPORTANT: eigenvalues are NOT symmetric (|λ₊| ≠ |λ₋|)
+        expected_count = 2 * (j_max + 1)  # 2 eigenvalues per k-level
+        assert len(unique_eigs) == expected_count, (
+            f"Expected {expected_count} unique eigenvalues (2 per k-level), "
+            f"got {len(unique_eigs)}"
+        )
+
+        # Verify pairing: each k-level has λ₊ = +(k+1/2) and λ₋ = -(k+3/2)
+        # For k=1,2,3: expect {+1.5, -2.5}, {+2.5, -3.5}, {+3.5, -4.5}
         positive_eigs = unique_eigs[unique_eigs > 1e-9]
         negative_eigs = unique_eigs[unique_eigs < -1e-9]
 
-        # Symmetry: |positive| == |negative|
+        # Both branches should have j_max+1 eigenvalues (one per k-level)
         assert (
-            len(positive_eigs) == len(negative_eigs)
-        ), f"Eigenvalues not symmetric: {len(positive_eigs)} positive vs {len(negative_eigs)} negative"
-
-        # Check: -positive_eigs == negative_eigs (reversed)
-        np.testing.assert_allclose(-positive_eigs[::-1], negative_eigs, atol=1e-6)
+            len(positive_eigs) == j_max + 1
+        ), f"Expected {j_max+1} positive eigenvalues, got {len(positive_eigs)}"
+        assert (
+            len(negative_eigs) == j_max + 1
+        ), f"Expected {j_max+1} negative eigenvalues, got {len(negative_eigs)}"

@@ -22,14 +22,14 @@ from cc_toy_lab.spectral.s3_s1_product_discretized import (
 
 def test_s3_dimension_calculation():
     """Verify S³ Hilbert space dimension formula (arXiv:1103.4097 degeneracy)."""
-    # n=0: 2(0+1)² = 2
-    assert s3_dimension(0) == 2
+    # j_max=0: k=1 → 2(1+1)² = 8
+    assert s3_dimension(0) == 8
 
-    # n=0,1: 2(1)² + 2(2)² = 2 + 8 = 10
-    assert s3_dimension(1) == 10
+    # j_max=1: k=1,2 → 8 + 2(2+1)² = 8 + 18 = 26
+    assert s3_dimension(1) == 26
 
-    # n=0,1,2: 2 + 8 + 2(3)² = 2 + 8 + 18 = 28
-    assert s3_dimension(2) == 28
+    # j_max=2: k=1,2,3 → 8 + 18 + 2(3+1)² = 8 + 18 + 32 = 58
+    assert s3_dimension(2) == 58
 
 
 def test_s3_dirac_operator_hermiticity():
