@@ -1,0 +1,34 @@
+{
+  "purpose": "Gate 4 dry-run feasibility check",
+  "protocol_commit": "1f4173c",
+  "dry_run_plan_commit": "ef49495",
+  "no_verdict": true,
+  "full_gate4_execution": false,
+  "grid": {
+    "families": [
+      "spectral_circle",
+      "ring",
+      "wilson_ring"
+    ],
+    "disorder_values": [
+      0,
+      20
+    ],
+    "sizes": [
+      16,
+      64,
+      128
+    ],
+    "j_max_values": [
+      2,
+      3
+    ],
+    "seeds": [
+      123
+    ],
+    "alpha": 0.0,
+    "mode": "geometric_weight",
+    "radius": 1.0
+  },
+  "n_cases": 36
+}
