@@ -329,7 +329,7 @@ Exploratory W=20 signal (4.68x) now **CONFIRMED** by pre-registered replication 
 **Current status:** EXPLORATORY strong signal (4.68x) **CONFIRMED** by pre-registered replication (2.68x).
 
 **Correct overall verdict:**  
-**TRACK_C_CONFIRMATORY_VALIDATED** ✅
+**TRACK_C_CONFIRMATORY_EVIDENCE_WITH_CAVEATS** ✅
 
 ---
 
@@ -357,7 +357,7 @@ Exploratory W=20 signal (4.68x) now **CONFIRMED** by pre-registered replication 
 
 ### ✅ ALLOWED (UPDATED — Gate 3C COMPLETE)
 
-> "S³×S¹ Gate 3 confirmatory diagnostic (720 cases, pre-planned grid) showed 1.75x absolute IPR contrast (verdict: weak_or_inconclusive). Follow-up exploratory disorder sweep (24 cases, W ∈ {16, 20, 24}) observed local contrast peak 4.68x at W=20. **Gate 3C pre-registered confirmatory replication (648 cases, W={0,12,20}, threshold ≥2.0x) completed with verdict PASS: W=20 contrast 2.68x, all Triad Gate criteria met (T1/T4/T5).** Exploratory W=20 signal now **CONFIRMED**. Metric validated through independent sanity tests (6/6 passed). Controls prove diagnostic tests S³ geometry (6/6 passed). Wilson_ring/s64 resolved (91/91 passed). **Overall verdict: CONFIRMATORY_VALIDATED.** S³×S¹ at W=20 validated for FL transfer hypothesis."
+> "S³×S¹ Gate 3 confirmatory diagnostic (720 cases, pre-planned grid) showed 1.75x absolute IPR contrast (verdict: weak_or_inconclusive). Follow-up exploratory disorder sweep (24 cases, W ∈ {16, 20, 24}) observed local contrast peak 4.68x at W=20. **Gate 3C pre-registered confirmatory replication (648 cases, W={0,12,20}, threshold ≥2.0x) completed with verdict PASS: W=20 contrast 2.68x, all Triad Gate criteria met (T1/T4/T5).** Exploratory W=20 signal now **CONFIRMED**. Metric validated through independent sanity tests (6/6 passed). Controls prove diagnostic tests S³ geometry (6/6 passed). Wilson_ring/s64 resolved (91/91 passed). **Overall verdict: CONFIRMATORY_EVIDENCE_WITH_CAVEATS.** S³×S¹ at W=20 shows finite-lattice localization evidence for FL transfer hypothesis (Anderson disorder, N≤3712)."
 
 ### ❌ FORBIDDEN
 
@@ -378,7 +378,7 @@ Exploratory W=20 signal (4.68x) now **CONFIRMED** by pre-registered replication 
 | **Controls (6 tests)** | VALIDATION | PASS | "Only checks algebra" | "Proves tests physics (S³ geometry)" |
 | **Wilson_ring/s64 (91 tests)** | CAVEAT RESOLUTION | RESOLVED | — | "Safe for s1_size=64" |
 
-**Overall:** CONFIRMATORY Gate 3C = **PASS** (2.68x). EXPLORATORY signal (4.68x) = **CONFIRMED**. VALIDATED = **YES** (S³×S¹ at W=20).
+**Overall:** CONFIRMATORY Gate 3C = **PASS** (2.68x). EXPLORATORY signal (4.68x) = **CONFIRMED**. FINITE-LATTICE EVIDENCE = **YES** (S³×S¹ at W=20, with caveats).
 
 ---
 
@@ -388,7 +388,7 @@ Exploratory W=20 signal (4.68x) now **CONFIRMED** by pre-registered replication 
 
 **NOW ALLOWED:** Gate 4 full grid (finite-size scaling, s1_sizes {16, 32, 64, 128, 256})
 
-**NOW ALLOWED:** Claim "S³×S¹ validated at W=20" (Gate 3C confirmatory PASS)
+**NOW ALLOWED:** Claim "S³×S¹ shows confirmatory finite-lattice localization evidence at W=20 under Anderson disorder, with N≤3712 caveat" (Gate 3C confirmatory PASS)
 
 **NOW ALLOWED:** External review submission (with caveats: finite-size, single disorder type, single geometry)
 
@@ -464,15 +464,15 @@ Exploratory W=20 signal (4.68x) now **CONFIRMED** by pre-registered replication 
 
 ## Final Verdict (Updated After Gate 3C Completion)
 
-**TRACK_C_CONFIRMATORY_VALIDATED** ✅
+**TRACK_C_CONFIRMATORY_EVIDENCE_WITH_CAVEATS** ✅
 
 **STATUS:**
-- ✅ S3S1_VALIDATED (at W=20)
+- ✅ S3S1_FINITE_LATTICE_EVIDENCE (at W=20, with caveats)
 - ❌ FL_GENERALIZED (S²×S² not done)
-- ✅ READY_FOR_EXTERNAL_REVIEW (with caveats)
+- ✅ READY_FOR_EXTERNAL_REVIEW (with full caveats)
 
 **Honest assessment:**  
-Gate 3 confirmatory result weak (1.75x). Exploratory disorder sweep strong (4.68x at W=20). **Gate 3C pre-registered confirmatory replication COMPLETE — PASS (2.68x ≥ 2.0x, all Triad Gate criteria met).** Exploratory W=20 signal **CONFIRMED** by independent pre-registered test. Metric validated, controls pass, caveats resolved. **S³×S¹ at W=20 now VALIDATED.**
+Gate 3 confirmatory result weak (1.75x). Exploratory disorder sweep strong (4.68x at W=20). **Gate 3C pre-registered confirmatory replication COMPLETE — PASS (2.68x ≥ 2.0x, all Triad Gate criteria met).** Exploratory W=20 signal **CONFIRMED** by independent pre-registered test. Metric validated, controls pass, caveats resolved. **S³×S¹ at W=20 now has confirmatory finite-lattice evidence, with caveats.**
 
 **Rating:** ~~8.7/10~~ → **9.3/10** (upgrade for confirmatory validation achieved)
 
