@@ -63,7 +63,9 @@ def build_s3_s1_product_operator(
 
     # Build S³ Dirac operator
     d_s3, chi_s3 = build_s3_dirac_operator(j_max=int(j_max), radius=float(radius))
-    d = np.asarray(d_s3, dtype=float)
+    # S³ Dirac is Hermitian (complex dtype) but eigenvalues are real
+    assert np.allclose(d_s3.imag, 0, atol=1e-14), "S³ Dirac operator should be real-valued"
+    d = d_s3.real
     h_s3 = d @ d  # D_S3^2 (Laplacian-like)
 
     # Build S¹ operator
