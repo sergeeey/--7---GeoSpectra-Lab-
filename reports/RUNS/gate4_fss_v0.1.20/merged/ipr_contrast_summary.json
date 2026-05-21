@@ -1,0 +1,96 @@
+{
+  "description": "IPR contrast: mean_low_ipr(W=20) - mean_low_ipr(W=0). Positive values indicate localization at W=20.",
+  "data_quality_note": "Excluded 2 numerical outliers (|mean_low_ipr| > 1000)",
+  "excluded_cases": [
+    {
+      "case_id": 47,
+      "reason": "numerical_overflow"
+    },
+    {
+      "case_id": 95,
+      "reason": "numerical_overflow"
+    }
+  ],
+  "n_valid_cases": 214,
+  "overall": {
+    "W0_mean_ipr": -27.599216006932462,
+    "W0_median_ipr": -18.329514824797844,
+    "W0_std_ipr": 30.775530848067085,
+    "W20_mean_ipr": -94.2265265745844,
+    "W20_median_ipr": -57.5644664884322,
+    "W20_std_ipr": 106.27407840902696,
+    "absolute_contrast_mean": -66.62731056765193,
+    "absolute_contrast_median": -39.23495166363436,
+    "n_W0": 71,
+    "n_W20": 72
+  },
+  "by_family": {
+    "spectral_circle": {
+      "W0_mean_ipr": -15.711768671804776,
+      "W20_mean_ipr": -61.63692995176032,
+      "absolute_contrast": -45.925161279955546,
+      "n_W0": 24,
+      "n_W20": 24
+    },
+    "ring": {
+      "W0_mean_ipr": -44.15453519028541,
+      "W20_mean_ipr": -164.12207090535293,
+      "absolute_contrast": -119.96753571506753,
+      "n_W0": 23,
+      "n_W20": 24
+    },
+    "wilson_ring": {
+      "W0_mean_ipr": -23.62114912468026,
+      "W20_mean_ipr": -56.920578866639886,
+      "absolute_contrast": -33.29942974195963,
+      "n_W0": 24,
+      "n_W20": 24
+    }
+  },
+  "by_size": {
+    "16": {
+      "W0_mean_ipr": -1.2553852436465371,
+      "W20_mean_ipr": -12.312238050866842,
+      "absolute_contrast": -11.056852807220306,
+      "n_W0": 18,
+      "n_W20": 18
+    },
+    "32": {
+      "W0_mean_ipr": -10.50836993163722,
+      "W20_mean_ipr": -39.82218552298852,
+      "absolute_contrast": -29.3138155913513,
+      "n_W0": 18,
+      "n_W20": 18
+    },
+    "64": {
+      "W0_mean_ipr": -30.652133938376316,
+      "W20_mean_ipr": -102.00310916957834,
+      "absolute_contrast": -71.35097523120203,
+      "n_W0": 18,
+      "n_W20": 18
+    },
+    "128": {
+      "W0_mean_ipr": -70.35637249684258,
+      "W20_mean_ipr": -222.76857355490384,
+      "absolute_contrast": -152.41220105806127,
+      "n_W0": 17,
+      "n_W20": 18
+    }
+  },
+  "by_j_max": {
+    "2": {
+      "W0_mean_ipr": -30.447119867240595,
+      "W20_mean_ipr": -96.81215255007186,
+      "absolute_contrast": -66.36503268283127,
+      "n_W0": 36,
+      "n_W20": 36
+    },
+    "3": {
+      "W0_mean_ipr": -24.669943464901255,
+      "W20_mean_ipr": -91.64090059909692,
+      "absolute_contrast": -66.97095713419567,
+      "n_W0": 35,
+      "n_W20": 36
+    }
+  }
+}

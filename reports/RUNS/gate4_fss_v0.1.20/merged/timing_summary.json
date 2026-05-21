@@ -1,0 +1,85 @@
+{
+  "total_runtime_sec": 5768.932742357254,
+  "total_runtime_min": 96.14887903928756,
+  "mean_batch_runtime_sec": 640.9925269285837,
+  "batches": [
+    {
+      "batch_id": 1,
+      "family": "spectral_circle",
+      "disorder_W": 0,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 651.375919342041
+    },
+    {
+      "batch_id": 2,
+      "family": "spectral_circle",
+      "disorder_W": 12,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 640.6499342918396
+    },
+    {
+      "batch_id": 3,
+      "family": "spectral_circle",
+      "disorder_W": 20,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 625.588308095932
+    },
+    {
+      "batch_id": 4,
+      "family": "ring",
+      "disorder_W": 0,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 679.2658455371857
+    },
+    {
+      "batch_id": 5,
+      "family": "ring",
+      "disorder_W": 12,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 679.1362040042877
+    },
+    {
+      "batch_id": 6,
+      "family": "ring",
+      "disorder_W": 20,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 618.1237947940826
+    },
+    {
+      "batch_id": 7,
+      "family": "wilson_ring",
+      "disorder_W": 0,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 624.466986656189
+    },
+    {
+      "batch_id": 8,
+      "family": "wilson_ring",
+      "disorder_W": 12,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 630.0234169960022
+    },
+    {
+      "batch_id": 9,
+      "family": "wilson_ring",
+      "disorder_W": 20,
+      "n_cases": 24,
+      "n_failed": 0,
+      "runtime_sec": 620.3023326396942
+    }
+  ],
+  "per_case_stats": {
+    "mean_sec": 26.691311436670798,
+    "median_sec": 3.759408950805664,
+    "max_sec": 180.77795004844666,
+    "min_sec": 0.29008913040161133
+  }
+}

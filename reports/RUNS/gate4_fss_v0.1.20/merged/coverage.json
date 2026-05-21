@@ -1,0 +1,33 @@
+{
+  "total_cases": 216,
+  "unique_case_ids": 216,
+  "expected_total": 216,
+  "families": [
+    "ring",
+    "spectral_circle",
+    "wilson_ring"
+  ],
+  "disorder_strengths": [
+    0,
+    12,
+    20
+  ],
+  "s1_sizes": [
+    16,
+    32,
+    64,
+    128
+  ],
+  "j_maxes": [
+    2,
+    3
+  ],
+  "seeds": [
+    123,
+    456,
+    789
+  ],
+  "missing_case_ids": [],
+  "duplicate_case_ids": [],
+  "coverage_complete": true
+}
