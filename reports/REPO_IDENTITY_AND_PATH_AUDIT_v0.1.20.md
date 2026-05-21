@@ -1,20 +1,28 @@
 # Repo Identity and Path Audit — v0.1.20
 
 **Дата:** 2026-05-21 05:45 Almaty  
-**Статус:** 🔍 AUDIT COMPLETE — cleanup done, rename BLOCKED  
-**Цель:** Стабилизация локального репозитория после миграции + оценка возможности переименования remote
+**Обновлено:** 2026-05-21 11:15 Almaty (после GitHub rename)  
+**Статус:** ✅ RENAME COMPLETED — repository identity fully aligned  
+**Цель:** Стабилизация локального репозитория после миграции + переименование remote
 
 ---
 
 ## Executive Summary
 
-**Текущее состояние:**
-- ✅ Локальная папка стабилизирована: `N-7-GeoSpectra-Lab` (чистый ASCII)
+**Итоговое состояние (после rename):**
+- ✅ Локальная папка: `N-7-GeoSpectra-Lab` (чистый ASCII)
+- ✅ GitHub repository: `N-7-GeoSpectra-Lab` (переименован успешно)
+- ✅ Remote URL: `https://github.com/sergeeey/N-7-GeoSpectra-Lab.git` (aligned)
 - ✅ Generated junk очищен (cache, logs, backups)
-- ⚠️ Remote URL содержит закодированную кириллицу: `--7---GeoSpectra-Lab-`
-- 🔴 **Rename BLOCKED:** uncommitted changes (1 modified + 4 untracked files)
+- ✅ **Identity status:** FULLY ALIGNED (local ↔ remote)
+- ✅ Working tree: clean
+- ✅ Push status: synchronized
 
-**Рекомендация:** Сначала commit текущие изменения, затем переименовать remote
+**GitHub Rename:**
+- Old URL: `https://github.com/sergeeey/--7---GeoSpectra-Lab-`
+- New URL: `https://github.com/sergeeey/N-7-GeoSpectra-Lab`
+- Completed: 2026-05-21 11:00 Almaty
+- Redirect: Active (GitHub auto-redirect ~1 year)
 
 ---
 
@@ -27,8 +35,9 @@ E:\Проверка Гипотез\работаю над проверкой ги
 **Характеристики:**
 - ✅ Чистый ASCII (без кириллицы)
 - ✅ Git repository (branch: main)
-- ✅ Синхронизирован с origin (последний коммит: 9be68c5)
-- ⚠️ Uncommitted changes: 7 файлов
+- ✅ Синхронизирован с origin (последний коммит: 687588d)
+- ✅ Working tree: clean (no uncommitted changes)
+- ✅ Branch tracking: main → origin/main
 
 ---
 
@@ -38,9 +47,10 @@ E:\Проверка Гипотез\работаю над проверкой ги
 
 | Path | Git Status | Remote | Files |
 |------|------------|--------|-------|
-| `Н-7 - GeoSpectra Lab теории ковариантной компактификации` | ✅ Git repo | `https://github.com/sergeeey/--7---GeoSpectra-Lab-.git` | Кириллица в имени |
+| `Н-7 - GeoSpectra Lab теории ковариантной компактификации` | ✅ Git repo | `https://github.com/sergeeey/--7---GeoSpectra-Lab-.git` (старый URL) | Кириллица в имени |
 
-**Риск:** Дублирование репозитория, возможны конфликты при работе
+**Риск:** Дублирование репозитория, возможны конфликты при работе  
+**Статус:** Archive pending (не удалено по запросу пользователя)
 
 ### 2.2 Non-Git Directories
 
@@ -53,16 +63,22 @@ E:\Проверка Гипотез\работаю над проверкой ги
 
 ---
 
-## 3. Current Remote URL
+## 3. Remote URL (After Rename)
 
-**Origin:**
+**Old Origin (before 2026-05-21):**
 ```
 https://github.com/sergeeey/--7---GeoSpectra-Lab-.git
 ```
-
 **Проблема:** Кириллица "Н-7" закодирована как `--7--` (URL encoding artifacts)
 
-**Branch:** `main`
+**New Origin (after 2026-05-21 11:00):**
+```
+https://github.com/sergeeey/N-7-GeoSpectra-Lab.git
+```
+✅ **Решение:** Чистый ASCII, соответствует локальной папке
+
+**Branch:** `main`  
+**Branch tracking:** `main → origin/main` (upstream verified)
 
 **Tags (последние 5):**
 - `v0.1.19-track-c-gate-1`
@@ -70,6 +86,11 @@ https://github.com/sergeeey/--7---GeoSpectra-Lab-.git
 - `v0.1.17-validation-hardening`
 - `v0.1.16-methodology-review-draft`
 - `v0.1.15-s2-s1-product-discretized-full`
+
+**Redirect Status:**
+- Old URL (`--7---GeoSpectra-Lab-`) → автоматический редирект на новый URL
+- Срок действия редиректа: ~1 год (GitHub auto-redirect)
+- Проверено: старый URL работает через редирект
 
 ---
 
@@ -98,31 +119,35 @@ https://github.com/sergeeey/N-7-GeoSpectra-Lab.git
 
 ---
 
-## 5. Is Rename Safe Now?
+## 5. Rename Status
 
-**Статус:** 🔴 **BLOCKED**
+**Статус:** ✅ **COMPLETED** (2026-05-21 11:00 Almaty)
 
-### Blocking Reasons
+### Rename Timeline
 
-| # | Reason | Impact | Resolution |
-|---|--------|--------|------------|
-| 1 | **Uncommitted changes** | 7 файлов (1 M + 4 ?? + 2 D) | Commit or stash before rename |
-| 2 | **Old git repo exists** | `Н-7 - GeoSpectra...` points to same remote | Archive or delete before rename |
-| 3 | **GitHub repo rename requires admin** | Must rename on GitHub first | Manual GitHub UI operation |
+| Step | Status | Date/Time | Details |
+|------|--------|-----------|---------|
+| 1. Commit uncommitted changes | ✅ DONE | 2026-05-21 10:15 | 2 commits: 19fc7df + 687588d |
+| 2. Clean working tree | ✅ DONE | 2026-05-21 10:20 | `git status` clean |
+| 3. GitHub repo rename | ✅ DONE | 2026-05-21 11:00 | `--7---GeoSpectra-Lab-` → `N-7-GeoSpectra-Lab` |
+| 4. Update local remote | ✅ DONE | 2026-05-21 11:05 | `git remote set-url origin <new-url>` |
+| 5. Verify connection | ✅ DONE | 2026-05-21 11:05 | `git fetch origin` successful |
 
-### Current Uncommitted Changes
+### Previous Blocking Reasons (Resolved)
+
+| # | Reason | Resolution | Status |
+|---|--------|------------|--------|
+| 1 | Uncommitted changes (7 files) | ✅ Committed (19fc7df + 687588d) | RESOLVED |
+| 2 | Old git repo exists | ⏸️ Archive pending (not deleted per user request) | ACKNOWLEDGED |
+| 3 | GitHub repo rename | ✅ Completed via GitHub UI | RESOLVED |
+
+### Current Working Tree
 
 ```
- D .claude/settings.local.json
- D .claude/verification_plan.md
- M cc_toy_lab/spectral/s3_s1_product_discretized.py
-?? scripts/run_gate3_full.py
-?? scripts/s3_s1_gate3_profiles.py
-?? scripts/s3_s1_product_discretized_ipr_smoke.py
-?? tests/test_s3_s1_product_discretized_ipr_smoke.py
+(пустой вывод)
 ```
 
-**Recommended:** Commit Gate 3 infrastructure first (eigenvalue fix + scripts/tests)
+✅ **Working tree clean** — no uncommitted changes
 
 ---
 
@@ -153,13 +178,13 @@ https://github.com/sergeeey/N-7-GeoSpectra-Lab.git
 
 ---
 
-## 7. Remaining Uncommitted Changes
+## 7. Committed Changes (After Cleanup)
 
-### Modified Files (1)
+### Commit 1: Functional Fix (19fc7df)
 
-| File | Change Type | Classification | Commit Ready? |
-|------|-------------|----------------|---------------|
-| `cc_toy_lab/spectral/s3_s1_product_discretized.py` | Eigenvalue fix | ✅ KEEP_AND_COMMIT | YES |
+| File | Change Type | Status |
+|------|-------------|--------|
+| `cc_toy_lab/spectral/s3_s1_product_discretized.py` | Eigenvalue fix | ✅ COMMITTED |
 
 **Diff:**
 ```diff
@@ -169,98 +194,100 @@ https://github.com/sergeeey/N-7-GeoSpectra-Lab.git
 + d = d_s3.real
 ```
 
-### Untracked Files (4)
+**Commit message:**
+```
+fix(s3-s1): avoid unsafe complex-to-float cast
+```
 
-| File | Size | Classification | Commit Ready? |
-|------|------|----------------|---------------|
-| `scripts/run_gate3_full.py` | 1.3K | ✅ KEEP_AND_COMMIT | YES |
-| `scripts/s3_s1_gate3_profiles.py` | 2.8K | ✅ KEEP_AND_COMMIT | YES |
-| `scripts/s3_s1_product_discretized_ipr_smoke.py` | 14K | ✅ KEEP_AND_COMMIT | YES |
-| `tests/test_s3_s1_product_discretized_ipr_smoke.py` | 4.8K | ✅ KEEP_AND_COMMIT | YES |
+### Commit 2: Gate 3 Infrastructure (687588d)
+
+| File | Size | Status |
+|------|------|--------|
+| `scripts/run_gate3_full.py` | 1.3K | ✅ COMMITTED |
+| `scripts/s3_s1_gate3_profiles.py` | 2.8K | ✅ COMMITTED |
+| `scripts/s3_s1_product_discretized_ipr_smoke.py` | 14K | ✅ COMMITTED |
+| `tests/test_s3_s1_product_discretized_ipr_smoke.py` | 4.8K | ✅ COMMITTED |
+| `reports/REPO_IDENTITY_AND_PATH_AUDIT_v0.1.20.md` | 11K | ✅ COMMITTED |
+
+**Commit message:**
+```
+feat(gate-3): add S3xS1 Gate 3 infrastructure and repo audit
+```
 
 **Purpose:** Gate 3 full diagnostic infrastructure (S³×S¹ smoke test + profiles)
 
-### Deleted Files (2)
+### Restored Files (Not Committed)
 
-| File | Status | Classification | Action |
-|------|--------|----------------|--------|
-| `.claude/settings.local.json` | D | SAFE_TO_DELETE | Do not commit deletion |
-| `.claude/verification_plan.md` | D | SAFE_TO_DELETE | Do not commit deletion (v0.1.15 plan, project on v0.1.19) |
+| File | Status | Action Taken |
+|------|--------|--------------|
+| `.claude/settings.local.json` | Restored from HEAD | Not committed (local settings) |
+| `.claude/verification_plan.md` | Restored from HEAD | Not committed (v0.1.15 plan, outdated) |
 
 ---
 
-## 8. Next Steps
+## 8. Completed Steps
 
-### Step 1: Commit Current Work (REQUIRED before rename)
+### ✅ Step 1: Commit Current Work
 
-```bash
-# Stage only valid changes
-git add cc_toy_lab/spectral/s3_s1_product_discretized.py
-git add scripts/run_gate3_full.py scripts/s3_s1_gate3_profiles.py scripts/s3_s1_product_discretized_ipr_smoke.py
-git add tests/test_s3_s1_product_discretized_ipr_smoke.py
+**Status:** COMPLETED (2026-05-21 10:15)
 
-# Commit
-git commit -m "feat(gate-3): add Gate 3 infrastructure and eigenvalue fix
+Commits created:
+- `19fc7df` fix(s3-s1): avoid unsafe complex-to-float cast
+- `687588d` feat(gate-3): add S3xS1 Gate 3 infrastructure and repo audit
 
-- Fix S³ Dirac operator: explicit .real extraction with assert
-- Add Gate 3 full diagnostic runner (1440 cases)
-- Add Gate 3 profiles (tiny/medium/full)
-- Add S³×S¹ IPR smoke test script and pytest tests
+### ✅ Step 2: Clean Unstaged Deletions
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
-```
+**Status:** COMPLETED (2026-05-21 10:20)
 
-### Step 2: Clean Unstaged Deletions
+Restored from HEAD:
+- `.claude/settings.local.json`
+- `.claude/verification_plan.md`
 
-```bash
-# Reset deleted files from staging (do not commit deletion)
-git restore --staged .claude/settings.local.json .claude/verification_plan.md
-```
+### ⏸️ Step 3: Archive/Delete Old Folders
 
-### Step 3: Archive/Delete Old Folders
+**Status:** PENDING (deferred per user request)
 
-**Option A: Archive old git repo**
-```bash
-# Move to archive location (outside work directory)
-mv "../Н-7 - GeoSpectra Lab теории ковариантной компактификации" "E:/Archive/GeoSpectra-old-$(date +%Y%m%d)"
-```
+Old folders still present:
+- `Н-7 - GeoSpectra Lab теории ковариантной компактификации` (git repo)
+- `Н-7 - GeoSpectra Lab теории ковариантной компактификації` (copy)
+- `Н-7 - GeoSpectra Lab теории ковариантної компактифікаціі` (copy)
 
-**Option B: Delete old git repo (after backup confirmation)**
-```bash
-# ONLY if you have recent backup or pushed to GitHub
-rm -rf "../Н-7 - GeoSpectra Lab теории ковариантной компактификации"
-```
+**Action:** Archive pending, not deleted per user instruction
 
-**Delete non-git copies:**
-```bash
-rm -rf "../Н-7 - GeoSpectra Lab теории ковариантной компактификації"
-rm -rf "../Н-7 - GeoSpectra Lab теории ковариантної компактифікаціі"
-```
+### ✅ Step 4: Rename GitHub Repository
 
-### Step 4: Rename GitHub Repository (MANUAL)
+**Status:** COMPLETED (2026-05-21 11:00)
 
-1. Open: `https://github.com/sergeeey/--7---GeoSpectra-Lab-`
-2. Go to: Settings → Repository name
-3. Rename: `--7---GeoSpectra-Lab-` → `N-7-GeoSpectra-Lab`
-4. Confirm: Rename button
+- GitHub UI: Settings → Repository name
+- Renamed: `--7---GeoSpectra-Lab-` → `N-7-GeoSpectra-Lab`
+- Redirect: Active (GitHub auto-redirect ~1 year)
+- Verification: New URL accessible, old URL redirects
 
-**GitHub auto-redirects:** Old URL will redirect to new for ~1 year
+### ✅ Step 5: Update Local Remote
 
-### Step 5: Update Local Remote
+**Status:** COMPLETED (2026-05-21 11:05)
 
 ```bash
-# After GitHub rename, update local remote
 git remote set-url origin https://github.com/sergeeey/N-7-GeoSpectra-Lab.git
-
-# Verify
-git remote -v
 ```
 
-### Step 6: Push (ONLY after rename complete)
+Verified:
+- `git remote -v` shows new URL
+- `git fetch origin` successful
+- Branch tracking: `main → origin/main` working
 
-```bash
-git push origin main --tags
-```
+### ✅ Step 6: Push
+
+**Status:** COMPLETED (2026-05-21 10:30)
+
+Pushed before rename:
+- Commits: `2f37753..687588d` (includes 19fc7df + 687588d)
+- Tag: `v0.1.19-track-c-gate-1`
+- Status: Synchronized with GitHub
+
+### ⏸️ Step 7: Gate 4
+
+**Status:** NOT STARTED (deferred per user request)
 
 ---
 
@@ -298,35 +325,43 @@ git push origin main --tags
 
 ---
 
-## 10. Decision Matrix
+## 10. Decision Matrix (Final Status)
 
-| Condition | Can Rename Now? | Action |
-|-----------|-----------------|--------|
-| Uncommitted changes exist | ❌ NO | Commit first (Step 1) |
-| Old git repo exists | ⚠️ CAUTION | Archive/delete first (Step 3) |
-| Working tree clean | ✅ YES | Proceed with GitHub rename (Step 4) |
-| Already pushed to GitHub | ✅ SAFE | Rename preserves history |
+| Condition | Status Before | Status After | Action Taken |
+|-----------|---------------|--------------|--------------|
+| Uncommitted changes exist | ❌ BLOCKED | ✅ RESOLVED | Committed (19fc7df + 687588d) |
+| Old git repo exists | ⚠️ CAUTION | ⏸️ ACKNOWLEDGED | Archive pending per user request |
+| Working tree clean | ❌ NO | ✅ YES | Cleanup completed |
+| Already pushed to GitHub | ✅ YES | ✅ YES | Synchronized before rename |
+| GitHub repo renamed | ❌ NO | ✅ YES | Completed 2026-05-21 11:00 |
+| Local remote updated | ❌ NO | ✅ YES | Updated to new URL |
 
-**Current state:** ❌ **BLOCKED** (uncommitted changes)
+**Final state:** ✅ **RENAME COMPLETED** — repository identity fully aligned
 
 ---
 
-## 11. Summary
+## 11. Summary (Final)
 
 **Local path:** ✅ Stabilized (`N-7-GeoSpectra-Lab`)  
-**Remote URL:** ⚠️ Contains encoding artifacts (`--7---GeoSpectra-Lab-`)  
-**Old folders:** 🔴 3 duplicates found (1 git repo, 2 copies)  
-**Uncommitted changes:** 🔴 7 files (1 M + 4 ?? + 2 D)  
-**Rename status:** 🔴 **BLOCKED** until commit + old folder cleanup
+**Remote URL:** ✅ Aligned (`N-7-GeoSpectra-Lab`) — encoding artifacts removed  
+**Old folders:** ⏸️ 3 duplicates found (archive pending per user request)  
+**Uncommitted changes:** ✅ 0 files (working tree clean)  
+**Rename status:** ✅ **COMPLETED** (GitHub + local remote updated)  
+**Identity status:** ✅ **FULLY ALIGNED** (local ↔ remote ↔ GitHub)  
+**Push status:** ✅ Synchronized  
+**Branch tracking:** ✅ `main → origin/main` verified  
+**Gate 4:** ⏸️ Not started (deferred per user request)
 
-**Next action:** Commit Gate 3 infrastructure (Step 1), then proceed with Steps 2-6
+**Next action:** Optional old folders cleanup (Step 3) or continue development
 
 ---
 
 **References:**
-- Last commit: `9be68c5 feat(gate-3c): confirmatory finite-lattice evidence at W=20`
+- Last commit: `687588d feat(gate-3): add S3xS1 Gate 3 infrastructure and repo audit`
+- Previous commit: `19fc7df fix(s3-s1): avoid unsafe complex-to-float cast`
 - Current tag: `v0.1.19-track-c-gate-1`
 - Branch: `main`
-- Remote: `https://github.com/sergeeey/--7---GeoSpectra-Lab-.git`
+- Old remote: `https://github.com/sergeeey/--7---GeoSpectra-Lab-.git` (redirects)
+- New remote: `https://github.com/sergeeey/N-7-GeoSpectra-Lab.git` (active)
 
-**Status:** AUDIT COMPLETE — ready for commit and rename workflow
+**Status:** ✅ RENAME COMPLETED — repository identity audit successful
