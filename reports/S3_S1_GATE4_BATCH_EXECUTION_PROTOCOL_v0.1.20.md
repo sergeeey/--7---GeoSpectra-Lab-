@@ -79,6 +79,33 @@ Batch 9: wilson_ring, W=20      → 24 cases
 
 **Estimated runtime per batch:** 2.4h ÷ 9 ≈ 16 min (based on dry-run)
 
+### 3.1 Deviation from Dry-Run Recommendation
+
+**Dry-run recommendation (commit 52d221f, line 96):** 8 batches × 27 cases
+
+**Actual implementation:** 9 batches × 24 cases
+
+**Reason for deviation:**
+- Dry-run tested only 2 disorder values (W=0, 20)
+- Full grid includes **3** disorder values (W=0, 12, 20) per locked protocol (commit 1f4173c)
+- Batch split by (family, disorder_W) → 3 families × 3 W = **9 batches**
+- Arithmetic: 9 × 24 = 216 (same total cases, grid unchanged)
+
+**Category:** Execution scheduling detail only. **Locked scientific protocol (commit 1f4173c) remains UNCHANGED.**
+
+**Verification:**
+- Scientific grid: unchanged (families, W, sizes, j_max, seeds all match locked protocol)
+- Metrics: unchanged (IPR, r-statistic definitions identical)
+- Decision rules: unchanged (2.0× threshold, verdict logic)
+- Total runtime: unchanged (~2.4h for 216 cases)
+- Coverage: verified complete (--print-plan: 216 cases, 0 duplicates, 0 missing)
+
+**Semantic coherence improvement:**
+- 9×24 split: Each batch = single (family, W) pair → better failure localization
+- 8×27 split: Would require mixing (family, W) pairs → less coherent
+
+**Detailed analysis:** See `reports/GATE4_BATCH_DESIGN_DEVIATION_REVIEW_v0.1.20.md`
+
 ---
 
 ## 4. Output File Structure
