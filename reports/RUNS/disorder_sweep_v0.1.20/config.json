@@ -1,0 +1,29 @@
+{
+  "families": [
+    "spectral_circle",
+    "ring",
+    "wilson_ring"
+  ],
+  "j_max_values": [
+    2
+  ],
+  "s1_sizes": [
+    32
+  ],
+  "alpha_values": [
+    0.0
+  ],
+  "disorder_values": [
+    0.0,
+    16.0,
+    20.0,
+    24.0
+  ],
+  "seeds": [
+    123,
+    456
+  ],
+  "n_low": 5,
+  "radius": 1.0,
+  "mode": "geometric_weight"
+}
