@@ -1,0 +1,28 @@
+{
+  "control": "random_hermitian",
+  "disorder_strength": 20,
+  "s1_size": 128,
+  "j_max": 3,
+  "seed": 123,
+  "alpha": 0.0,
+  "radius": 1.0,
+  "N": 13824,
+  "true_ipr_mean": 0.0002278546965265664,
+  "r_stat": 0.5290774481282822,
+  "uses_eigenvectors": true,
+  "ipr_metric_version": "v0.1.22_negative_controls_true_ipr",
+  "runtime_seconds": 217.90759930000013,
+  "meta": {
+    "control": "random_hermitian",
+    "j_max": 3,
+    "s1_size": 128,
+    "disorder_strength": 20.0,
+    "seed": 123,
+    "radius": 1.0,
+    "s3_dimension": 108,
+    "total_dimension": 13824,
+    "off_diagonal_scale": 1.0,
+    "construction": "diagonal disorder + Gaussian off-diagonal",
+    "status": "Control A: falsification baseline"
+  }
+}
