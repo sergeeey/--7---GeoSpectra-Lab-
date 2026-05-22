@@ -100,9 +100,12 @@ Latest synthetic-control run:
 | Toy Dirac localization/chirality | verified negative control |
 | S2 x graph intermediate bridge | historical artificial bridge |
 | S2 x S1 product-operator bridge | configured full profile passed |
+| **S³×S¹ Gate 4B FSS (v0.1.21)** | **GATE4B_FSS_PASS_WITH_CAVEATS** |
 | Continuum product geometry | not yet validated |
 | `S6` / `S3 x S6` | not yet validated |
 | Standard Model physics | not validated |
+
+**Gate 4B Update (2026-05-22):** S³×S¹ finite-size scaling campaign completed with metric-corrected true IPR. 216/216 cases, 0 failures, aggregate contrast 7.15× (W=20 vs W=0), FSS trend STRENGTHENING (3.76× → 24.90×). Verdict: GATE4B_FSS_PASS_WITH_CAVEATS. Full report: `reports/S3_S1_GATE4B_FSS_RESULTS_v0.1.21.md`. Status: `reports/CURRENT_STATUS_v0.1.21_GATE4B_FINAL.md`.
 
 Verified finite-mode S2 Dirac monopole index control:
 
