@@ -1,25 +1,37 @@
-"""Gate 4 Batched Execution — S³×S¹ Finite-Size Scaling (216 cases)
+"""Gate 4B Batched Execution — S³×S¹ Finite-Size Scaling (216 cases) v0.1.21
+
+VERSION: v0.1.21 (Metric-Corrected)
+CRITICAL CHANGE FROM v0.1.20:
+- Metric corrected: eigvalsh → eigh (eigenvalues + eigenvectors)
+- True IPR = Σ|ψᵢ|⁴ (eigenvector-based), NOT mean(eigenvalues)
+- Grid UNCHANGED: same 216 cases as v0.1.20
+- Thresholds UNCHANGED: same decision rules
 
 ⚠️ CRITICAL GUARDRAILS:
-- This script executes the LOCKED Gate 4 pre-registration (commit 1f4173c)
-- Do NOT run without completing pre-run thermal checklist
+- This script executes the LOCKED Gate 4 pre-registration (commit 1f4173c + v0.1.21 protocol)
+- Do NOT run without completing pre-run thermal checklist + unit tests
 - Protocol immutability: no grid/threshold changes allowed
 - Forbidden claims: "S³×S¹ validated", "FL generalized", "W=20 optimal"
 - No partial PASS: verdict requires all 216 cases complete
 
 Batching strategy:
 - 9 batches × 24 cases (split by family × disorder_W)
-- Batch runtime: ~16 min per batch (estimated)
-- Total runtime: ~2.4h sequential, ~16 min parallel
+- Batch runtime: ~16 min per batch (v0.1.20 estimate)
+- v0.1.21 runtime: TBD (benchmark required, ~10× overhead expected)
 
 Pre-requisites:
-1. Pre-registration locked: commit 1f4173c
-2. Dry-run completed: commit 52d221f
-3. Thermal checklist completed
+1. Pre-registration locked: commit 1f4173c (v0.1.20) + v0.1.21 protocol
+2. Unit tests pass: pytest tests/test_ipr_metric.py -v (ALL GREEN)
+3. Runtime benchmark completed
 4. Git status clean
 
-Date: 2026-05-21
-Status: INFRASTRUCTURE IMPLEMENTATION (not protocol change)
+Date: 2026-05-22 (v0.1.21 metric correction)
+Status: METRIC IMPLEMENTATION (not protocol/grid change)
+
+Related:
+- reports/S3_S1_GATE4_METRIC_MISMATCH_ERRATUM_v0.1.20.md
+- reports/S3_S1_GATE4_FSS_PREREGISTRATION_v0.1.21.md
+- reports/GATE4_TRUE_IPR_RECOVERY_CHECK_v0.1.20.md
 """
 
 import sys
@@ -34,7 +46,7 @@ import numpy as np
 from collections import defaultdict
 
 from cc_toy_lab.spectral.s3_s1_product_discretized import build_s3_s1_product_operator
-from cc_toy_lab.spectral.metrics import mean_adjacent_gap_ratio
+from cc_toy_lab.spectral.metrics import mean_adjacent_gap_ratio, inverse_participation_ratio
 
 
 # Locked Gate 4 pre-registration grid (commit 1f4173c)
@@ -50,12 +62,12 @@ FULL_GRID = {
 }
 
 # Protocol commits
-PROTOCOL_COMMIT = "1f4173c"
+PROTOCOL_COMMIT = "1f4173c"  # Original v0.1.20 protocol
 DRY_RUN_RESULTS_COMMIT = "52d221f"
-BATCH_PROTOCOL_VERSION = "v0.1.20"
+BATCH_PROTOCOL_VERSION = "v0.1.21"  # Metric-corrected: true IPR
 
-# Output directory
-OUTPUT_BASE = Path("reports/RUNS/gate4_fss_v0.1.20")
+# Output directory (v0.1.21: metric-corrected rerun)
+OUTPUT_BASE = Path("reports/RUNS/gate4_fss_v0.1.21")
 
 
 def generate_full_grid():
@@ -212,13 +224,22 @@ def run_single_case(case):
             radius=case["radius"],
         )
 
-        # Compute eigenvalues (required for both IPR and r-statistic)
-        eigvals = np.linalg.eigvalsh(H)
+        # Compute eigenvalues AND eigenvectors (v0.1.21: corrected from eigvalsh)
+        eigvals, eigvecs = np.linalg.eigh(H)
 
-        # IPR metric (from dry-run)
+        # True IPR metric (v0.1.21: eigenvector-based, corrected from eigenvalue mean)
         N = H.shape[0]
-        low_eigvals = eigvals[: int(0.1 * N)]  # Bottom 10%
-        mean_low_ipr = float(np.mean(low_eigvals))
+        n_low = int(0.1 * N)  # Bottom 10%
+        low_indices = np.argsort(eigvals)[:n_low]
+        low_eigvals = eigvals[low_indices]
+        low_eigvecs = eigvecs[:, low_indices]
+
+        # Compute true IPR = Σ|ψᵢ|⁴ for each low eigenstate
+        iprs = inverse_participation_ratio(low_eigvecs)  # Returns array
+        mean_low_ipr = float(np.mean(iprs))
+
+        # Diagnostic: eigenvalue mean (for v0.1.20 comparison)
+        mean_low_eigenvalue = float(np.mean(low_eigvals))
 
         # r-statistic (adjacent gap ratio)
         # Use spectral window for localization analysis (bottom 10% same as IPR)
@@ -241,6 +262,7 @@ def run_single_case(case):
     except Exception as e:
         error = str(e)
         mean_low_ipr = None
+        mean_low_eigenvalue = None
         r_stat = None
         r_stat_available = False
         r_stat_reason = "case_execution_failed"
@@ -255,7 +277,16 @@ def run_single_case(case):
         "j_max": case["j_max"],
         "seed": case["seed"],
         "runtime_sec": elapsed,
-        "mean_low_ipr": mean_low_ipr,
+        # v0.1.21 canonical metric fields
+        "true_ipr_mean": mean_low_ipr,  # Canonical: mean of true IPR = Σ|ψᵢ|⁴
+        "uses_eigenvectors": True,  # Confirms eigenvector-based computation
+        # Diagnostic fields
+        "mean_low_eigenvalue": mean_low_eigenvalue,  # For v0.1.20 comparison
+        # Deprecated compatibility alias (v0.1.20 field name)
+        "mean_low_ipr": mean_low_ipr,  # DEPRECATED: use true_ipr_mean (v0.1.21+)
+        # Metadata
+        "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+        # r-statistic (unchanged)
         "r_stat": r_stat,
         "r_stat_available": r_stat_available,
         "r_stat_reason": r_stat_reason,

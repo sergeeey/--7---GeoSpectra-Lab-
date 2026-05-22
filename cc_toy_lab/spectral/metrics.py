@@ -23,12 +23,24 @@ def inverse_participation_ratio(vector: np.ndarray) -> float | np.ndarray:
     """IPR = sum |psi|^4 / (sum |psi|^2)^2.
 
     If a 2D matrix is passed, columns are treated as eigenvectors.
+
+    Raises:
+        ValueError: If vector is zero (norm^2 < 1e-15) or not 1D/2D.
     """
     arr = np.asarray(vector)
     if arr.ndim == 1:
-        denom = np.sum(np.abs(arr) ** 2) ** 2
+        norm_sq = np.sum(np.abs(arr) ** 2)
+        if norm_sq < 1e-15:
+            raise ValueError("Cannot compute IPR for zero vector (norm^2 < 1e-15)")
+        denom = norm_sq**2
         return float(np.sum(np.abs(arr) ** 4) / denom)
     if arr.ndim == 2:
-        denom = np.sum(np.abs(arr) ** 2, axis=0) ** 2
+        norm_sq = np.sum(np.abs(arr) ** 2, axis=0)
+        if np.any(norm_sq < 1e-15):
+            zero_cols = np.where(norm_sq < 1e-15)[0]
+            raise ValueError(
+                f"Cannot compute IPR for zero vector(s) in column(s): {zero_cols.tolist()}"
+            )
+        denom = norm_sq**2
         return np.sum(np.abs(arr) ** 4, axis=0) / denom
     raise ValueError("vector must be 1D or 2D")
