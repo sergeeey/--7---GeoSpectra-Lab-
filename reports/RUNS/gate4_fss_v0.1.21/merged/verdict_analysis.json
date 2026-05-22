@@ -1,0 +1,76 @@
+{
+  "verdict": "GATE4_FSS_PASS_WITH_CAVEATS",
+  "reason": "All 7 PASS conditions satisfied",
+  "aggregate_contrast": {
+    "aggregate_contrast_ratio": 7.150395265879512,
+    "aggregate_contrast_absolute": 0.20069365583873422,
+    "mean_ipr_w0": 0.03263101754648525,
+    "mean_ipr_w20": 0.23332467338521942
+  },
+  "family_contrasts": {
+    "ring": {
+      "mean_ipr_w0": 0.03929930263945574,
+      "mean_ipr_w20": 0.3267122725566654,
+      "contrast_ratio": 8.313436896171602,
+      "contrast_absolute": 0.28741296991720966,
+      "n_cases": 24
+    },
+    "spectral_circle": {
+      "mean_ipr_w0": 0.029296875,
+      "mean_ipr_w20": 0.12453483709369727,
+      "contrast_ratio": 4.250789106131533,
+      "contrast_absolute": 0.09523796209369727,
+      "n_cases": 24
+    },
+    "wilson_ring": {
+      "mean_ipr_w0": 0.029296875,
+      "mean_ipr_w20": 0.24872691050529563,
+      "contrast_ratio": 8.489878545247425,
+      "contrast_absolute": 0.21943003550529563,
+      "n_cases": 24
+    }
+  },
+  "families_pass": "3/3",
+  "finite_size_trend": {
+    "size_trend_ratio": {
+      "16": 3.7598256242059445,
+      "32": 6.733141651104486,
+      "64": 11.93268856855875,
+      "128": 24.896358474808274
+    },
+    "trend_verdict": "stable_or_strengthening",
+    "largest_size_contrast_ratio": 24.896358474808274
+  },
+  "r_statistic": {
+    "r_w0_mean": 0.6055756094194362,
+    "r_w20_mean": 0.4427620141239963,
+    "r_shift": -0.16281359529543993,
+    "r_verdict": "supports_localization"
+  },
+  "controls": {
+    "stability_by_size": {
+      "16": {
+        "mean": 0.068214248475988,
+        "std": 0.008254639925641707,
+        "cv": 0.12101049428914269
+      },
+      "32": {
+        "mean": 0.03533405255532339,
+        "std": 0.005776492747227208,
+        "cv": 0.16348231605142977
+      },
+      "64": {
+        "mean": 0.017948820624692007,
+        "std": 0.0032864632129832204,
+        "cv": 0.18310190299980306
+      },
+      "128": {
+        "mean": 0.0090269485299376,
+        "std": 0.0017176643245652326,
+        "cv": 0.1902818343173943
+      }
+    },
+    "max_cv": 0.1902818343173943,
+    "control_verdict": "stable"
+  }
+}

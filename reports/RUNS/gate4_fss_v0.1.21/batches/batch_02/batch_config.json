@@ -1,0 +1,9 @@
+{
+  "batch_id": 2,
+  "family": "spectral_circle",
+  "disorder_W": 12,
+  "n_cases": 24,
+  "protocol_commit": "1f4173c",
+  "dry_run_results_commit": "52d221f",
+  "batch_protocol_version": "v0.1.21"
+}

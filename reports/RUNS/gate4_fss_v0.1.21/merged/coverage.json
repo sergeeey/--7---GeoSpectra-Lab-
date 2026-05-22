@@ -1,0 +1,30 @@
+{
+  "families": {
+    "spectral_circle": 72,
+    "ring": 72,
+    "wilson_ring": 72
+  },
+  "W_values": {
+    "0": 72,
+    "12": 72,
+    "20": 72
+  },
+  "sizes": {
+    "16": 54,
+    "32": 54,
+    "64": 54,
+    "128": 54
+  },
+  "j_max_values": {
+    "2": 108,
+    "3": 108
+  },
+  "seeds": {
+    "123": 72,
+    "456": 72,
+    "789": 72
+  },
+  "total_unique_cases": 216,
+  "expected_cases": 216,
+  "coverage_complete": true
+}

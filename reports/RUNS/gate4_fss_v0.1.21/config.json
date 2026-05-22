@@ -1,0 +1,38 @@
+{
+  "purpose": "Gate 4 full execution (216 cases)",
+  "protocol_commit": "1f4173c",
+  "dry_run_results_commit": "52d221f",
+  "batch_protocol_version": "v0.1.21",
+  "grid": {
+    "families": [
+      "spectral_circle",
+      "ring",
+      "wilson_ring"
+    ],
+    "disorder_values": [
+      0,
+      12,
+      20
+    ],
+    "sizes": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "j_max_values": [
+      2,
+      3
+    ],
+    "seeds": [
+      123,
+      456,
+      789
+    ],
+    "alpha": 0.0,
+    "mode": "geometric_weight",
+    "radius": 1.0
+  },
+  "n_cases": 216,
+  "n_batches": 9
+}
