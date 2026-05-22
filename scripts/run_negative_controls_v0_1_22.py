@@ -249,15 +249,17 @@ def run_single_case(case: dict) -> dict:
     return result
 
 
-def run_batch(batch: dict, output_dir: Path) -> list[dict]:
-    """Execute all cases in one batch."""
+def run_batch(batch: dict, output_dir: Path, case_limit: int = None) -> list[dict]:
+    """Execute all cases in one batch (or limited number for smoke test)."""
     batch_dir = output_dir / f"batch_{batch['batch_id']:02d}"
     batch_dir.mkdir(parents=True, exist_ok=True)
 
     results = []
-    for i, case in enumerate(batch["cases"], start=1):
+    cases_to_run = batch["cases"][:case_limit] if case_limit else batch["cases"]
+
+    for i, case in enumerate(cases_to_run, start=1):
         print(
-            f"  Case {i}/{len(batch['cases'])}: "
+            f"  Case {i}/{len(cases_to_run)}: "
             f"{case['control']}, W={case['disorder_strength']}, "
             f"s1_size={case['s1_size']}, seed={case['seed']}..."
         )
@@ -298,6 +300,12 @@ def main():
         default=str(OUTPUT_BASE),
         help=f"Output directory (default: {OUTPUT_BASE})",
     )
+    parser.add_argument(
+        "--case-limit",
+        type=int,
+        default=None,
+        help="Limit number of cases per batch (for smoke tests)",
+    )
 
     args = parser.parse_args()
 
@@ -333,12 +341,16 @@ def main():
         # Run single batch
         batch = batches[args.batch_id - 1]
         print(f"Running Batch {batch['batch_id']}/{len(batches)}...")
-        run_batch(batch, output_dir)
+        if args.case_limit:
+            print(f"  ⚠️ Smoke test mode: limiting to {args.case_limit} case(s)")
+        run_batch(batch, output_dir, case_limit=args.case_limit)
     else:
         # Run all batches
         for batch in batches:
             print(f"Running Batch {batch['batch_id']}/{len(batches)}...")
-            run_batch(batch, output_dir)
+            if args.case_limit:
+                print(f"  ⚠️ Smoke test mode: limiting to {args.case_limit} case(s)")
+            run_batch(batch, output_dir, case_limit=args.case_limit)
 
     print()
     print("✓ Negative controls pilot execution complete")

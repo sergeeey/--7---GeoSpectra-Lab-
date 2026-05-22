@@ -1,0 +1,31 @@
+{
+  "protocol_version": "v0.1.22",
+  "total_cases": 54,
+  "total_batches": 6,
+  "grid": {
+    "controls": [
+      "random_hermitian",
+      "scrambled_geometry",
+      "broken_wilson_term"
+    ],
+    "disorder_values": [
+      0,
+      20
+    ],
+    "sizes": [
+      16,
+      64,
+      128
+    ],
+    "j_max_values": [
+      3
+    ],
+    "seeds": [
+      123,
+      456,
+      789
+    ],
+    "alpha": 0.0,
+    "radius": 1.0
+  }
+}
