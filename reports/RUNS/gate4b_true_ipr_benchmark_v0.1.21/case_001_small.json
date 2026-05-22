@@ -1,0 +1,19 @@
+{
+  "case_id": "case_001_small",
+  "label": "Small (baseline)",
+  "family": "spectral_circle",
+  "disorder_W": 0,
+  "s1_size": 16,
+  "j_max": 2,
+  "seed": 123,
+  "expected_N": 464,
+  "actual_N": 928,
+  "runtime_sec": 0.5609664916992188,
+  "runtime_min": 0.009349441528320313,
+  "true_ipr_mean": 0.0625,
+  "uses_eigenvectors": true,
+  "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+  "mean_low_eigenvalue": 0.3152173913043467,
+  "r_stat": 0.999999999999999,
+  "error": null
+}

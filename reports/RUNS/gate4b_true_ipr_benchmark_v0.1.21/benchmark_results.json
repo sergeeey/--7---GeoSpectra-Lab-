@@ -1,0 +1,81 @@
+{
+  "benchmark_version": "v0.1.21",
+  "timestamp": "2026-05-22 08:53:27",
+  "n_cases_total": 3,
+  "n_cases_successful": 3,
+  "n_cases_failed": 0,
+  "per_case_results": [
+    {
+      "case_id": "case_001_small",
+      "label": "Small (baseline)",
+      "family": "spectral_circle",
+      "disorder_W": 0,
+      "s1_size": 16,
+      "j_max": 2,
+      "seed": 123,
+      "expected_N": 464,
+      "actual_N": 928,
+      "runtime_sec": 0.5609664916992188,
+      "runtime_min": 0.009349441528320313,
+      "true_ipr_mean": 0.0625,
+      "uses_eigenvectors": true,
+      "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+      "mean_low_eigenvalue": 0.3152173913043467,
+      "r_stat": 0.999999999999999,
+      "error": null
+    },
+    {
+      "case_id": "case_002_medium",
+      "label": "Medium (Gate 3C size)",
+      "family": "ring",
+      "disorder_W": 12,
+      "s1_size": 64,
+      "j_max": 3,
+      "seed": 123,
+      "expected_N": 2432,
+      "actual_N": 6912,
+      "runtime_sec": 34.06566786766052,
+      "runtime_min": 0.5677611311276753,
+      "true_ipr_mean": 0.31649089250714035,
+      "uses_eigenvectors": true,
+      "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+      "mean_low_eigenvalue": -110.0228354548604,
+      "r_stat": 0.3312689293267769,
+      "error": null
+    },
+    {
+      "case_id": "case_003_worst_case",
+      "label": "Worst-case-like (largest)",
+      "family": "wilson_ring",
+      "disorder_W": 20,
+      "s1_size": 128,
+      "j_max": 3,
+      "seed": 123,
+      "expected_N": 3712,
+      "actual_N": 13824,
+      "runtime_sec": 167.5423607826233,
+      "runtime_min": 2.7923726797103883,
+      "true_ipr_mean": 0.27457561677905906,
+      "uses_eigenvectors": true,
+      "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+      "mean_low_eigenvalue": -134.21569778492454,
+      "r_stat": 0.3670993868960706,
+      "error": null
+    }
+  ],
+  "extrapolation": {
+    "status": "SUCCESS",
+    "n_cases_benchmarked": 3,
+    "mean_runtime_per_case_sec": 67.38966504732768,
+    "mean_runtime_per_case_min": 1.123161084122128,
+    "extrapolated_216_cases_min": 242.60279417037967,
+    "extrapolated_216_cases_hours": 4.0433799028396615,
+    "overhead_factor_vs_v0120": 2.5244827697229937,
+    "v0120_reference_per_case_min": 0.44490740740740736
+  },
+  "decision": {
+    "decision": "FULL_GRID_FEASIBLE",
+    "reason": "Extrapolated runtime 4.0 hours < 18 hours",
+    "action": "Execute full 216-case grid via --run-all (can run overnight unattended)"
+  }
+}

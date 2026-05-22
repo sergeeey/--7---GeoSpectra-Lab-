@@ -1,0 +1,19 @@
+{
+  "case_id": "case_003_worst_case",
+  "label": "Worst-case-like (largest)",
+  "family": "wilson_ring",
+  "disorder_W": 20,
+  "s1_size": 128,
+  "j_max": 3,
+  "seed": 123,
+  "expected_N": 3712,
+  "actual_N": 13824,
+  "runtime_sec": 167.5423607826233,
+  "runtime_min": 2.7923726797103883,
+  "true_ipr_mean": 0.27457561677905906,
+  "uses_eigenvectors": true,
+  "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+  "mean_low_eigenvalue": -134.21569778492454,
+  "r_stat": 0.3670993868960706,
+  "error": null
+}

@@ -1,0 +1,37 @@
+{
+  "benchmark_version": "v0.1.21",
+  "timestamp": "2026-05-22 08:53:27",
+  "n_cases": 3,
+  "cases": [
+    {
+      "id": "case_001_small",
+      "label": "Small (baseline)",
+      "family": "spectral_circle",
+      "disorder_W": 0,
+      "s1_size": 16,
+      "j_max": 2,
+      "seed": 123,
+      "expected_N": 464
+    },
+    {
+      "id": "case_002_medium",
+      "label": "Medium (Gate 3C size)",
+      "family": "ring",
+      "disorder_W": 12,
+      "s1_size": 64,
+      "j_max": 3,
+      "seed": 123,
+      "expected_N": 2432
+    },
+    {
+      "id": "case_003_worst_case",
+      "label": "Worst-case-like (largest)",
+      "family": "wilson_ring",
+      "disorder_W": 20,
+      "s1_size": 128,
+      "j_max": 3,
+      "seed": 123,
+      "expected_N": 3712
+    }
+  ]
+}

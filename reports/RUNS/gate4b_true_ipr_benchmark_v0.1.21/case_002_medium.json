@@ -1,0 +1,19 @@
+{
+  "case_id": "case_002_medium",
+  "label": "Medium (Gate 3C size)",
+  "family": "ring",
+  "disorder_W": 12,
+  "s1_size": 64,
+  "j_max": 3,
+  "seed": 123,
+  "expected_N": 2432,
+  "actual_N": 6912,
+  "runtime_sec": 34.06566786766052,
+  "runtime_min": 0.5677611311276753,
+  "true_ipr_mean": 0.31649089250714035,
+  "uses_eigenvectors": true,
+  "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+  "mean_low_eigenvalue": -110.0228354548604,
+  "r_stat": 0.3312689293267769,
+  "error": null
+}
