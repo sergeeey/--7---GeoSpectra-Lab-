@@ -249,8 +249,17 @@ def run_single_case(case: dict) -> dict:
     return result
 
 
-def run_batch(batch: dict, output_dir: Path, case_limit: int = None) -> list[dict]:
-    """Execute all cases in one batch (or limited number for smoke test)."""
+def run_batch(
+    batch: dict, output_dir: Path, case_limit: int = None, cooling_pause: float = 0.0
+) -> list[dict]:
+    """Execute all cases in one batch (or limited number for smoke test).
+
+    Args:
+        batch: Batch configuration dict
+        output_dir: Output directory path
+        case_limit: Optional limit on number of cases
+        cooling_pause: Seconds to pause between cases (thermal constraint mitigation)
+    """
     batch_dir = output_dir / f"batch_{batch['batch_id']:02d}"
     batch_dir.mkdir(parents=True, exist_ok=True)
 
@@ -270,6 +279,11 @@ def run_batch(batch: dict, output_dir: Path, case_limit: int = None) -> list[dic
         case_file = batch_dir / f"case_{case['id']:03d}.json"
         with open(case_file, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2)
+
+        # Cooling pause (thermal constraint mitigation)
+        if cooling_pause > 0 and i < len(cases_to_run):
+            print(f"    💤 Cooling pause: {cooling_pause}s...")
+            time.sleep(cooling_pause)
 
     return results
 
@@ -305,6 +319,12 @@ def main():
         type=int,
         default=None,
         help="Limit number of cases per batch (for smoke tests)",
+    )
+    parser.add_argument(
+        "--cooling-pause",
+        type=float,
+        default=0.0,
+        help="Pause (seconds) between cases for CPU cooling (thermal constraint mitigation)",
     )
 
     args = parser.parse_args()
@@ -343,14 +363,20 @@ def main():
         print(f"Running Batch {batch['batch_id']}/{len(batches)}...")
         if args.case_limit:
             print(f"  ⚠️ Smoke test mode: limiting to {args.case_limit} case(s)")
-        run_batch(batch, output_dir, case_limit=args.case_limit)
+        if args.cooling_pause > 0:
+            print(f"  ❄️ Thermal mitigation: {args.cooling_pause}s pause between cases")
+        run_batch(batch, output_dir, case_limit=args.case_limit, cooling_pause=args.cooling_pause)
     else:
         # Run all batches
         for batch in batches:
             print(f"Running Batch {batch['batch_id']}/{len(batches)}...")
             if args.case_limit:
                 print(f"  ⚠️ Smoke test mode: limiting to {args.case_limit} case(s)")
-            run_batch(batch, output_dir, case_limit=args.case_limit)
+            if args.cooling_pause > 0:
+                print(f"  ❄️ Thermal mitigation: {args.cooling_pause}s pause between cases")
+            run_batch(
+                batch, output_dir, case_limit=args.case_limit, cooling_pause=args.cooling_pause
+            )
 
     print()
     print("✓ Negative controls pilot execution complete")
