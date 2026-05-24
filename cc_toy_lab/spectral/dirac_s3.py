@@ -76,9 +76,7 @@ def build_s3_dirac_operator(
     operator = np.zeros((total_dim, total_dim), dtype=complex)
 
     offset = 0
-    for k, dim_k, deg_pos, deg_neg in zip(
-        k_values, dimensions, degeneracies_pos, degeneracies_neg, strict=False
-    ):
+    for k, dim_k, deg_pos, deg_neg in zip(k_values, dimensions, degeneracies_pos, degeneracies_neg):
         # Eigenvalues for level k (arXiv:1103.4097 page 15)
         eigenvalue_pos = (k + 0.5) / radius  # +(k + 1/2) / R
         eigenvalue_neg = -(k + 1.5) / radius  # -(k + 3/2) / R

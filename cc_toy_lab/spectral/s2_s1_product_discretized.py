@@ -37,7 +37,9 @@ def _select_low_energy_indices(
     return np.argsort(abs_eigenvalues)[:count]
 
 
-def _select_fixed_window_low_energy_indices(abs_eigenvalues: np.ndarray, low_energy_count: int) -> np.ndarray:
+def _select_fixed_window_low_energy_indices(
+    abs_eigenvalues: np.ndarray, low_energy_count: int
+) -> np.ndarray:
     count = min(int(low_energy_count), abs_eigenvalues.size)
     return np.argsort(abs_eigenvalues)[:count]
 
@@ -266,7 +268,9 @@ def _v3_failure_bucket_key(c: ProductDiscretizedCaseResult) -> str:
     )
 
 
-def _extended_product_discretized_aggregates(cases: tuple[ProductDiscretizedCaseResult, ...]) -> dict[str, Any]:
+def _extended_product_discretized_aggregates(
+    cases: tuple[ProductDiscretizedCaseResult, ...],
+) -> dict[str, Any]:
     """Medium-style aggregates; safe for tiny runs (same schema)."""
     v3_fail_by_bucket: dict[str, int] = {}
     v2_v3_disagree = 0
@@ -377,7 +381,9 @@ def _single_spectrum_observation(
     fix_idx = _select_fixed_window_low_energy_indices(abs_ev, low_energy_count)
     ipr_low = _mean_s1_marginal_ipr(eigenvectors, low_idx, s2_dimension, s1_size)
     ipr_fix = _mean_s1_marginal_ipr(eigenvectors, fix_idx, s2_dimension, s1_size)
-    n_plus, n_minus, amb = _kernel_chirality_content(eigenvectors, kernel_idx, lifted_s2_chirality, chirality_tolerance)
+    n_plus, n_minus, amb = _kernel_chirality_content(
+        eigenvectors, kernel_idx, lifted_s2_chirality, chirality_tolerance
+    )
     return {
         "kernel_count": kc,
         "min_abs_eigenvalue": min_abs,
@@ -529,7 +535,13 @@ def _compare_localization_gate_v3_product(
     for kk in low_energy_count_values:
         k_int = int(kk)
         if not pass_by_window[k_int]:
-            unstable.append({"low_energy_count": k_int, "ipr_delta": float(ipr_delta_by_window[k_int]), "passed": False})
+            unstable.append(
+                {
+                    "low_energy_count": k_int,
+                    "ipr_delta": float(ipr_delta_by_window[k_int]),
+                    "passed": False,
+                }
+            )
 
     if p_pass < 2:
         classification = "fail"
@@ -546,7 +558,9 @@ def _compare_localization_gate_v3_product(
 
     return {
         "low_energy_count_values": tuple(int(x) for x in low_energy_count_values),
-        "ipr_delta_by_window": {int(k): float(ipr_delta_by_window[int(k)]) for k in low_energy_count_values},
+        "ipr_delta_by_window": {
+            int(k): float(ipr_delta_by_window[int(k)]) for k in low_energy_count_values
+        },
         "pass_by_window": {int(k): bool(pass_by_window[int(k)]) for k in low_energy_count_values},
         "pass_rate_across_windows": pass_rate,
         "min_ipr_delta": min_delta,
@@ -740,7 +754,8 @@ def analyze_product_discretized_case(
     )
     pbc_apbc_difference = bool(
         pbc_c["kernel_count"] != apbc_c["kernel_count"]
-        or abs(pbc_c["min_abs_eigenvalue"] - apbc_c["min_abs_eigenvalue"]) > cfg.flux_response_tolerance
+        or abs(pbc_c["min_abs_eigenvalue"] - apbc_c["min_abs_eigenvalue"])
+        > cfg.flux_response_tolerance
     )
 
     # W=0: geometric_weight collapses to clean in build_s1_operator — no disordered
@@ -749,7 +764,9 @@ def analyze_product_discretized_case(
         q0_control_passed = True
     else:
         q0_control_passed = bool(not (q == 0 and disordered["kernel_count"] > 0))
-    ring_alpha0_caveat_detected = bool(s1_family == "ring" and np.isclose(alpha, 0.0) and disorder_strength > 0.0)
+    ring_alpha0_caveat_detected = bool(
+        s1_family == "ring" and np.isclose(alpha, 0.0) and disorder_strength > 0.0
+    )
 
     kernel_only_pass = bool(v3["kernel_only_localization_gate_passed"])
     fixed_pass = bool(v3["fixed_window_localization_gate_passed"])
@@ -842,7 +859,9 @@ def _run_product_discretized_grid(
                                 after_each_case("primary", idx, c)
                             idx += 1
     if len(cases) != expected:
-        raise RuntimeError(f"case grid mismatch: got {len(cases)}, expected {expected} for profile {cfg.profile_name!r}")
+        raise RuntimeError(
+            f"case grid mismatch: got {len(cases)}, expected {expected} for profile {cfg.profile_name!r}"
+        )
 
     herm = all(c.hermiticity_max_residual <= cfg.hermiticity_tol for c in cases)
     shapes = all(c.total_dimension == c.s2_dimension * c.s1_size for c in cases)
@@ -872,7 +891,7 @@ def _run_product_discretized_grid(
     repro = all(
         abs(a.disordered_min_abs_eigenvalue - b.disordered_min_abs_eigenvalue) < 1e-12
         and a.disordered_kernel_count == b.disordered_kernel_count
-        for a, b in zip(cases, dup_cases, strict=True)
+        for a, b in zip(cases, dup_cases)
     )
 
     notes = (
@@ -962,9 +981,13 @@ def save_product_discretized_artifacts(
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "figures").mkdir(parents=True, exist_ok=True)
     cfg_payload = asdict(assessment.config)
-    (run_dir / "config.json").write_text(json.dumps(cfg_payload, indent=2, sort_keys=True), encoding="utf-8")
+    (run_dir / "config.json").write_text(
+        json.dumps(cfg_payload, indent=2, sort_keys=True), encoding="utf-8"
+    )
     metrics = assess_product_discretized_results(assessment)
-    (run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2, sort_keys=True), encoding="utf-8")
+    (run_dir / "metrics.json").write_text(
+        json.dumps(metrics, indent=2, sort_keys=True), encoding="utf-8"
+    )
     cases = assessment.cases
     np.savez_compressed(
         run_dir / "data.npz",
@@ -991,7 +1014,9 @@ def save_product_discretized_artifacts(
     }
 
 
-def _build_summary_markdown(assessment: ProductDiscretizedAssessment, metrics: dict[str, Any]) -> str:
+def _build_summary_markdown(
+    assessment: ProductDiscretizedAssessment, metrics: dict[str, Any]
+) -> str:
     profile = assessment.config.profile_name
     if profile == "tiny":
         title = "# Product-discretized S2 x S1 — tiny diagnostic"
