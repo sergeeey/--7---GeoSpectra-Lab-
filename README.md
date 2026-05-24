@@ -19,6 +19,29 @@ The current MVP tests:
 The project value is the reproducible filter: it should show where a toy
 hypothesis survives, where it fails, and which unexpected signals need follow-up.
 
+## Research Context and Inspiration
+
+GeoSpectra Lab is an independent computational project focused on falsification-first validation of finite-lattice spectral toy geometries.
+
+The project was initially inspired by broader questions in compact product geometries, Kaluza–Klein-style reasoning, and covariant compactification, including public work by Tom Lawrence on product manifolds and covariant compactification.
+
+GeoSpectra does **not** test or validate covariant compactification directly. It does **not** claim evidence for physical compactification, Standard Model structure, chirality, gauge-field derivation, or a thermodynamic/continuum limit.
+
+Instead, the project asks a narrower computational question:
+
+> Can a finite-lattice spectral validation harness distinguish a robust localization-like signal on a compact product toy geometry from artifacts of disorder strength, matrix sparsity, operator family, seed choice, spectral tails, metric handling, or geometry scrambling?
+
+**Current case study:**
+
+- Geometry: `S³×S¹` finite-lattice toy geometry
+- Disorder: Anderson-style diagonal disorder
+- Main diagnostic: true eigenvector-based IPR
+- Secondary diagnostic: adjacent gap ratio / r-statistic
+- Current milestone: Gate 4B v0.1.21 — `PASS_WITH_CAVEATS`
+- Active validation branch: v0.1.22 Negative Controls / Artifact Zoo
+
+**For detailed research context, see:** [`docs/RESEARCH_CONTEXT.md`](docs/RESEARCH_CONTEXT.md)
+
 ## What This Project Does NOT Prove
 
 - It does not prove covariant compactification.
@@ -890,24 +913,83 @@ Rules for interpretation:
 
 Priority order:
 
-1. Diagnose why `ring` fails `localization_gate_passed` on the full
+1. Complete v0.1.22 Negative Controls execution (batches 3-6 on remote infrastructure)
+2. Diagnose why `ring` fails `localization_gate_passed` on the full
    `S1`-discretization comparison while `spectral_circle` and `wilson_ring`
    pass.
-2. Add product-level figures if they improve interpretation without overclaim.
-3. Move to product-discretized geometric refinements before any `S6` or
+3. Add product-level figures if they improve interpretation without overclaim.
+4. Move to product-discretized geometric refinements before any `S6` or
    `S3 x S6` step.
-4. Repeat periodic-boundary follow-up with larger `L` if feasible, more seeds,
+5. Repeat periodic-boundary follow-up with larger `L` if feasible, more seeds,
    and explicit open-reference matching at the same resolution.
-5. Increase `L`, seed count, and W-grid resolution.
-6. Test window-width sensitivity for `quantile_0.5`.
-7. Test mobility-edge behavior across spectral windows.
-8. Check dense/sparse eigensolver consistency for the larger Anderson runs.
-9. Add geometry spectrum validation for `S2`, `S3`, `S6`, and `S3 x S6`.
+6. Increase `L`, seed count, and W-grid resolution.
+7. Test window-width sensitivity for `quantile_0.5`.
+8. Test mobility-edge behavior across spectral windows.
+9. Check dense/sparse eigensolver consistency for the larger Anderson runs.
+10. Add geometry spectrum validation for `S2`, `S3`, `S6`, and `S3 x S6`.
 
 The strongest next chirality-related step is an independent geometric
 discretization of the `S2` Dirac monopole operator. It should test whether the
 index-counting result survives a construction less directly tied to the known
 finite-mode spectrum.
+
+**For detailed roadmap, see:** [`docs/ROADMAP.md`](docs/ROADMAP.md)
+
+---
+
+## How to Cite This Work
+
+If you reference GeoSpectra Lab in your work, please cite:
+
+**Software:**
+
+```
+Boyko, S. (2026). GeoSpectra Lab: A Falsification-First Validation Harness 
+for Discretized Spectral Operators on Compact Product Manifolds (v0.1.16) 
+[Software]. Zenodo. https://doi.org/10.5281/zenodo.20252651
+```
+
+**BibTeX:**
+
+```bibtex
+@software{boyko2026geospectra,
+  author = {Boyko, Sergey},
+  title = {{GeoSpectra Lab: A Falsification-First Validation Harness 
+           for Discretized Spectral Operators on Compact Product Manifolds}},
+  year = {2026},
+  publisher = {Zenodo},
+  version = {v0.1.16},
+  doi = {10.5281/zenodo.20252651},
+  url = {https://doi.org/10.5281/zenodo.20252651}
+}
+```
+
+**Research context / inspiration:**
+
+If you reference the broader research context on covariant compactification, please cite Tom Lawrence's public work on product manifolds and covariant compactification (search: "Tom Lawrence covariant compactification" for latest publications).
+
+---
+
+## Acknowledgements
+
+This project was independently developed by **Sergey Boyko**.
+
+The research direction was partly inspired by public work on compact product manifolds and covariant compactification by Tom Lawrence. Any errors, interpretations, numerical models, or claims in GeoSpectra are entirely my own.
+
+**GeoSpectra is not affiliated with, endorsed by, or reviewed by Tom Lawrence unless explicitly stated otherwise.**
+
+**For detailed attribution and independence statement, see:** [`docs/RESEARCH_CONTEXT.md`](docs/RESEARCH_CONTEXT.md)
+
+**For explicit claim boundaries, see:** [`docs/CLAIMS_AND_CAVEATS.md`](docs/CLAIMS_AND_CAVEATS.md)
+
+---
+
+## Contact
+
+**Author:** Sergey Boyko  
+**Email:** sergeikuch80@gmail.com  
+**Project:** [https://github.com/sergeeey/--7---GeoSpectra-Lab-.git](https://github.com/sergeeey/--7---GeoSpectra-Lab-.git)  
+**DOI:** [10.5281/zenodo.20252651](https://doi.org/10.5281/zenodo.20252651)
 
 ## Toy Dirac Chirality/Index Diagnostic
 
