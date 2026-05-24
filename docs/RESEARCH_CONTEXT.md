@@ -166,11 +166,29 @@ This inspiration does **not** imply:
 
 ### External References
 
-For background on covariant compactification and related geometric approaches:
+#### Tom Lawrence's Work on Covariant Compactification
 
-- Tom Lawrence's public work on product manifolds and covariant compactification (search: "Tom Lawrence covariant compactification")
+**Peer-reviewed publications:**
 
-For falsification-first methodology:
+- Lawrence, T. (2021). "Tangent space symmetries in general relativity and teleparallelism." *International Journal of Geometric Methods in Modern Physics*.  
+  [arXiv:2211.07586](https://arxiv.org/abs/2211.07586) | [DOI:10.1142/S0219887821400089](https://doi.org/10.1142/S0219887821400089)
+
+- Lawrence, T. (2022). "Product manifolds as realisations of general linear symmetries." *International Journal of Geometric Methods in Modern Physics*.  
+  [arXiv:2203.09473](https://arxiv.org/abs/2203.09473) | [DOI:10.1142/S0219887822400060](https://doi.org/10.1142/S0219887822400060)
+
+**Preprints:**
+
+- Lawrence, T. (2023). "Covariant Compactification: a Radical Revision of Kaluza-Klein Unification."  
+  [preprints.org/202303.0314](https://www.preprints.org/manuscript/202303.0314/v1)
+
+- Lawrence, T. (2025). "Symmetries of Field Configurations and No-Go Theorems."  
+  [preprints.org/202510.2222](https://www.preprints.org/manuscript/202510.2222)
+
+**Profile:**
+- Website: [https://warpedandbroken.com/](https://warpedandbroken.com/)
+- ORCID: [0000-0002-2741-8226](https://orcid.org/0000-0002-2741-8226)
+
+#### Falsification-First Methodology
 
 - Popper, K. (1959). *The Logic of Scientific Discovery*
 - Platt, J. R. (1964). "Strong Inference." *Science*

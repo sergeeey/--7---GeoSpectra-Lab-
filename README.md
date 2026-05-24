@@ -974,7 +974,9 @@ If you reference the broader research context on covariant compactification, ple
 
 This project was independently developed by **Sergey Boyko**.
 
-The research direction was partly inspired by public work on compact product manifolds and covariant compactification by Tom Lawrence. Any errors, interpretations, numerical models, or claims in GeoSpectra are entirely my own.
+The research direction was partly inspired by public work on compact product manifolds and covariant compactification by **Tom Lawrence** ([ORCID: 0000-0002-2741-8226](https://orcid.org/0000-0002-2741-8226), Ronin Institute Research Scholar).
+
+Any errors, interpretations, numerical models, or claims in GeoSpectra are entirely my own.
 
 **GeoSpectra is not affiliated with, endorsed by, or reviewed by Tom Lawrence unless explicitly stated otherwise.**
 
