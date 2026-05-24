@@ -178,12 +178,16 @@ def print_grid_plan(batches, total_cases):
     print("=" * 80)
 
 
-def run_single_case(case: dict) -> dict:
+def run_single_case(case: dict, use_gpu: bool = False) -> dict:
     """Execute one negative control case.
 
     Metrics (same as Gate 4B):
     - true_ipr_mean: Canonical IPR (bottom 10% eigenstates, eigenvector-based)
     - r_stat: Level-spacing adjacent gap ratio
+
+    Args:
+        case: Case configuration dict
+        use_gpu: Use GPU (CuPy) for eigenvalue decomposition if True
     """
     control = case["control"]
     j_max = case["j_max"]
@@ -228,7 +232,25 @@ def run_single_case(case: dict) -> dict:
         raise ValueError(f"unknown control: {control}")
 
     # Compute eigenvalues + eigenvectors (full diagonalization)
-    eigenvalues, eigenvectors = eigh(operator)
+    if use_gpu:
+        # GPU acceleration via CuPy
+        import cupy as cp
+        from cupy.linalg import eigh as eigh_gpu
+
+        # Transfer to GPU
+        operator_gpu = cp.asarray(operator)
+        eigenvalues_gpu, eigenvectors_gpu = eigh_gpu(operator_gpu)
+
+        # Transfer back to CPU for metrics (numpy-based functions)
+        eigenvalues = cp.asnumpy(eigenvalues_gpu)
+        eigenvectors = cp.asnumpy(eigenvectors_gpu)
+
+        # Free GPU memory
+        del operator_gpu, eigenvalues_gpu, eigenvectors_gpu
+        cp.get_default_memory_pool().free_all_blocks()
+    else:
+        # CPU computation (original)
+        eigenvalues, eigenvectors = eigh(operator)
 
     # True IPR metric (v0.1.21 canonical metric)
     # Use bottom 10% eigenstates
@@ -266,7 +288,11 @@ def run_single_case(case: dict) -> dict:
 
 
 def run_batch(
-    batch: dict, output_dir: Path, case_limit: int = None, cooling_pause: float = 0.0
+    batch: dict,
+    output_dir: Path,
+    case_limit: int = None,
+    cooling_pause: float = 0.0,
+    use_gpu: bool = False,
 ) -> list[dict]:
     """Execute all cases in one batch (or limited number for smoke test).
 
@@ -275,6 +301,7 @@ def run_batch(
         output_dir: Output directory path
         case_limit: Optional limit on number of cases
         cooling_pause: Seconds to pause between cases (thermal constraint mitigation)
+        use_gpu: Use GPU (CuPy) for eigenvalue decomposition if True
     """
     batch_dir = output_dir / f"batch_{batch['batch_id']:02d}"
     batch_dir.mkdir(parents=True, exist_ok=True)
@@ -288,7 +315,7 @@ def run_batch(
             f"{case['control']}, W={case['disorder_strength']}, "
             f"s1_size={case['s1_size']}, seed={case['seed']}..."
         )
-        result = run_single_case(case)
+        result = run_single_case(case, use_gpu=use_gpu)
         results.append(result)
 
         # Save individual case result
@@ -342,6 +369,12 @@ def main():
         default=0.0,
         help="Pause (seconds) between cases for CPU cooling (thermal constraint mitigation)",
     )
+    parser.add_argument(
+        "--use-gpu",
+        action="store_true",
+        default=False,
+        help="🚀 Use GPU (NVIDIA CUDA via CuPy) for eigenvalue decomposition (5-10x faster)",
+    )
 
     args = parser.parse_args()
 
@@ -381,7 +414,15 @@ def main():
             print(f"  ⚠️ Smoke test mode: limiting to {args.case_limit} case(s)")
         if args.cooling_pause > 0:
             print(f"  ❄️ Thermal mitigation: {args.cooling_pause}s pause between cases")
-        run_batch(batch, output_dir, case_limit=args.case_limit, cooling_pause=args.cooling_pause)
+        if args.use_gpu:
+            print(f"  🚀 GPU acceleration: NVIDIA RTX via CuPy")
+        run_batch(
+            batch,
+            output_dir,
+            case_limit=args.case_limit,
+            cooling_pause=args.cooling_pause,
+            use_gpu=args.use_gpu,
+        )
     else:
         # Run all batches
         for batch in batches:
@@ -390,8 +431,14 @@ def main():
                 print(f"  ⚠️ Smoke test mode: limiting to {args.case_limit} case(s)")
             if args.cooling_pause > 0:
                 print(f"  ❄️ Thermal mitigation: {args.cooling_pause}s pause between cases")
+            if args.use_gpu:
+                print(f"  🚀 GPU acceleration: NVIDIA RTX via CuPy")
             run_batch(
-                batch, output_dir, case_limit=args.case_limit, cooling_pause=args.cooling_pause
+                batch,
+                output_dir,
+                case_limit=args.case_limit,
+                cooling_pause=args.cooling_pause,
+                use_gpu=args.use_gpu,
             )
 
     print()
