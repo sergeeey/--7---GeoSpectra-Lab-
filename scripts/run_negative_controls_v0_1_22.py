@@ -33,7 +33,23 @@ Related:
 """
 
 import sys
+import os
 from pathlib import Path
+
+# Thermal constraint mitigation: limit CPU cores to 80% (prevent overheating)
+# Detect total cores, use 80% to leave headroom for cooling
+import multiprocessing
+
+total_cores = multiprocessing.cpu_count()
+limited_cores = max(1, int(total_cores * 0.8))
+
+# Set thread limits for numpy/scipy BLAS libraries
+os.environ["OMP_NUM_THREADS"] = str(limited_cores)
+os.environ["MKL_NUM_THREADS"] = str(limited_cores)
+os.environ["OPENBLAS_NUM_THREADS"] = str(limited_cores)
+os.environ["NUMEXPR_NUM_THREADS"] = str(limited_cores)
+
+print(f"🔧 Thermal mitigation: limiting to {limited_cores}/{total_cores} CPU cores (80%)")
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
