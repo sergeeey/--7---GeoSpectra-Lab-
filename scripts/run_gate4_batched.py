@@ -196,7 +196,7 @@ def print_grid_plan(batches, total_cases):
     print()
 
 
-def run_single_case(case):
+def run_single_case(case, ipr_metric_version="v0.1.21_true_eigenvector_ipr"):
     """Run single Gate 4 case and collect all required metrics.
 
     Metrics collected:
@@ -204,6 +204,10 @@ def run_single_case(case):
     - r-statistic (adjacent gap ratio)
     - Runtime
     - Error status
+
+    Args:
+        case: case dict with grid parameters
+        ipr_metric_version: metric version tag stored in result metadata
     """
     start = time.time()
     error = None
@@ -285,7 +289,7 @@ def run_single_case(case):
         # Deprecated compatibility alias (v0.1.20 field name)
         "mean_low_ipr": mean_low_ipr,  # DEPRECATED: use true_ipr_mean (v0.1.21+)
         # Metadata
-        "ipr_metric_version": "v0.1.21_true_eigenvector_ipr",
+        "ipr_metric_version": ipr_metric_version,
         # r-statistic (unchanged)
         "r_stat": r_stat,
         "r_stat_available": r_stat_available,
@@ -296,8 +300,18 @@ def run_single_case(case):
     return result
 
 
-def save_batch_results(batch_dir, batch, results, batch_runtime):
-    """Save batch results to batch directory."""
+def save_batch_results(
+    batch_dir, batch, results, batch_runtime, protocol_version=BATCH_PROTOCOL_VERSION
+):
+    """Save batch results to batch directory.
+
+    Args:
+        batch_dir: output directory for this batch
+        batch: batch dict (batch_id, family, disorder_W, cases)
+        results: per-case result dicts
+        batch_runtime: batch wall-clock time (sec)
+        protocol_version: tag stored in batch_config.json (default: module BATCH_PROTOCOL_VERSION)
+    """
     batch_dir.mkdir(parents=True, exist_ok=True)
 
     # batch_config.json
@@ -308,7 +322,7 @@ def save_batch_results(batch_dir, batch, results, batch_runtime):
         "n_cases": len(batch["cases"]),
         "protocol_commit": PROTOCOL_COMMIT,
         "dry_run_results_commit": DRY_RUN_RESULTS_COMMIT,
-        "batch_protocol_version": BATCH_PROTOCOL_VERSION,
+        "batch_protocol_version": protocol_version,
     }
     with open(batch_dir / "batch_config.json", "w") as f:
         json.dump(config, f, indent=2)
@@ -388,8 +402,22 @@ def save_batch_results(batch_dir, batch, results, batch_runtime):
         f.write("\n".join(summary_lines))
 
 
-def run_batch(batch, output_base, force=False):
-    """Execute a single batch."""
+def run_batch(
+    batch,
+    output_base,
+    force=False,
+    protocol_version=BATCH_PROTOCOL_VERSION,
+    ipr_metric_version="v0.1.21_true_eigenvector_ipr",
+):
+    """Execute a single batch.
+
+    Args:
+        batch: batch dict
+        output_base: output base directory
+        force: overwrite existing completed batch results
+        protocol_version: batch protocol version tag (stored in batch_config.json)
+        ipr_metric_version: IPR metric version tag (stored in per-case results)
+    """
     batch_id = batch["batch_id"]
     batch_dir = output_base / "batches" / f"batch_{batch_id:02d}"
 
@@ -403,7 +431,7 @@ def run_batch(batch, output_base, force=False):
             print(
                 f"Batch {batch_id:2d} already completed (status: {status_data['status']}). Skipping."
             )
-            print(f"Use --force to re-run.")
+            print("Use --force to re-run.")
             return status_data
 
     print("=" * 80)
@@ -425,7 +453,7 @@ def run_batch(batch, output_base, force=False):
             flush=True,
         )
 
-        result = run_single_case(case)
+        result = run_single_case(case, ipr_metric_version=ipr_metric_version)
         results.append(result)
 
         if result["error"] is None:
@@ -444,7 +472,7 @@ def run_batch(batch, output_base, force=False):
     print()
 
     # Save results
-    save_batch_results(batch_dir, batch, results, batch_runtime)
+    save_batch_results(batch_dir, batch, results, batch_runtime, protocol_version=protocol_version)
 
     # Read status
     with open(batch_dir / "status.json", "r") as f:
@@ -503,7 +531,39 @@ def main():
     parser.add_argument(
         "--force", action="store_true", help="Force re-run (overwrite existing batch results)"
     )
+    parser.add_argument(
+        "--output-base",
+        type=Path,
+        default=OUTPUT_BASE,
+        help=f"Output base directory (default: {OUTPUT_BASE})",
+    )
+    parser.add_argument(
+        "--protocol-version",
+        type=str,
+        default=BATCH_PROTOCOL_VERSION,
+        help=f"Batch protocol version tag stored in config (default: {BATCH_PROTOCOL_VERSION})",
+    )
+    parser.add_argument(
+        "--ipr-metric-version",
+        type=str,
+        default="v0.1.21_true_eigenvector_ipr",
+        help="IPR metric version tag stored in per-case results (default: v0.1.21_true_eigenvector_ipr)",
+    )
     args = parser.parse_args()
+
+    # Safety guard 1: cross-version contamination prevention.
+    # If output_base path encodes a version tag that disagrees with --protocol-version,
+    # refuse to run — this protects archived v0.1.21 outputs from being overwritten with
+    # v0.1.24 results (and vice versa).
+    output_str = str(args.output_base)
+    for path_tag in ("v0.1.21", "v0.1.24"):
+        if f"gate4_fss_{path_tag}" in output_str and args.protocol_version != path_tag:
+            print(
+                f"ERROR: --output-base contains '{path_tag}' but --protocol-version is "
+                f"'{args.protocol_version}'. Refusing to run to prevent cross-version "
+                f"contamination of archived outputs."
+            )
+            raise SystemExit(1)
 
     # Generate full grid and batches
     cases = generate_full_grid()
@@ -562,28 +622,63 @@ def main():
         print("⚠️ WARNING: --run-all will execute ALL 9 batches sequentially (~2.4h)")
         print()
 
+    # Safety guard 2: existing completed batches require explicit --resume or --force.
+    # Prevents accidental no-op runs and accidental overwrites when reusing an existing
+    # output_base directory.
+    existing_batches_dir = args.output_base / "batches"
+    if existing_batches_dir.exists() and not (args.resume or args.force):
+        completed_found = False
+        for batch_id in range(1, len(batches) + 1):
+            status_file = existing_batches_dir / f"batch_{batch_id:02d}" / "status.json"
+            if status_file.exists():
+                completed_found = True
+                break
+        if completed_found:
+            print(
+                f"ERROR: --output-base '{args.output_base}' already contains batch results.\n"
+                f"Choose one:\n"
+                f"  --resume    to skip completed batches and continue\n"
+                f"  --force     to overwrite existing batch results\n"
+                f"  --output-base <new-dir>  to write into a fresh directory"
+            )
+            raise SystemExit(1)
+
     # Save full grid config
-    OUTPUT_BASE.mkdir(parents=True, exist_ok=True)
+    args.output_base.mkdir(parents=True, exist_ok=True)
     config = {
         "purpose": "Gate 4 full execution (216 cases)",
         "protocol_commit": PROTOCOL_COMMIT,
         "dry_run_results_commit": DRY_RUN_RESULTS_COMMIT,
-        "batch_protocol_version": BATCH_PROTOCOL_VERSION,
+        "batch_protocol_version": args.protocol_version,
+        "ipr_metric_version": args.ipr_metric_version,
+        "output_base": str(args.output_base),
         "grid": FULL_GRID,
         "n_cases": len(cases),
         "n_batches": len(batches),
     }
-    with open(OUTPUT_BASE / "config.json", "w") as f:
+    with open(args.output_base / "config.json", "w") as f:
         json.dump(config, f, indent=2)
 
     # Run batches
     if args.batch_id:
         batch = batches[args.batch_id - 1]
-        run_batch(batch, OUTPUT_BASE, force=args.force)
+        run_batch(
+            batch,
+            args.output_base,
+            force=args.force,
+            protocol_version=args.protocol_version,
+            ipr_metric_version=args.ipr_metric_version,
+        )
 
     elif args.run_all or args.resume:
         for batch in batches:
-            run_batch(batch, OUTPUT_BASE, force=args.force)
+            run_batch(
+                batch,
+                args.output_base,
+                force=args.force,
+                protocol_version=args.protocol_version,
+                ipr_metric_version=args.ipr_metric_version,
+            )
 
     # Check completion
     print()
@@ -591,7 +686,7 @@ def main():
     print("Overall Status")
     print("=" * 80)
 
-    all_complete, message = check_all_batches_complete(OUTPUT_BASE, len(batches))
+    all_complete, message = check_all_batches_complete(args.output_base, len(batches))
 
     print(f"Status: {message}")
     print()
