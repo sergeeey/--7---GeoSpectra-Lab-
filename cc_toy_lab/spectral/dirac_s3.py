@@ -59,23 +59,38 @@ def build_s3_dirac_operator(
         raise ValueError("radius must be positive")
 
     # Calculate total dimension using Dirac eigenspace degeneracy
-    # Theory (arXiv:1103.4097, page 15): for each level k ≥ 1:
-    #   - Positive eigenvalue λ₊ = +(k + 1/2) / R, degeneracy k(k+1)
-    #   - Negative eigenvalue λ₋ = -(k + 3/2) / R, degeneracy (k+2)(k+1)
-    #   - Total per level: k(k+1) + (k+2)(k+1) = 2(k+1)²
-    # Mapping: k = j_max+1 levels total (k = 1, 2, ..., j_max+1)
-    k_values = list(range(1, int(j_max) + 2))  # k starts from 1 in paper
-    dimensions = [2 * (k + 1) ** 2 for k in k_values]  # Total degeneracy = 2(k+1)²
+    # Theory (arXiv:1103.4097, page 15, Section 6):
+    #   - Negative branch: k ≥ 0, λ₋ = -(k + 3/2) / R, degeneracy (k+2)(k+1)
+    #   - Positive branch: k ≥ 1, λ₊ = +(k + 1/2) / R, degeneracy k(k+1)
+    # CRITICAL FIX v0.1.24: Negative branch includes k=0 (paper Section 6)
+    #   - k=0: λ = -3/2, degeneracy 2 (negative only, no positive counterpart)
+    #   - k≥1: both branches present, combined degeneracy 2(k+1)²
+
+    # Special case: k=0 (negative branch only)
+    k0_neg_degeneracy = 2  # (0+2)(0+1) = 2
+
+    # Regular levels: k ≥ 1 (both branches)
+    k_values = list(range(1, int(j_max) + 2))  # k = 1, 2, ..., j_max+1
+    dimensions = [2 * (k + 1) ** 2 for k in k_values]  # Total degeneracy per level k≥1
     degeneracies_pos = [k * (k + 1) for k in k_values]  # Positive branch degeneracy
     degeneracies_neg = [(k + 2) * (k + 1) for k in k_values]  # Negative branch degeneracy
-    total_dim = int(sum(dimensions))
 
-    # Construct Hermitian matrix with asymmetric eigenvalue structure
-    # CRITICAL: eigenvalues are NOT symmetric (|λ₊| ≠ |λ₋|)
-    # Paper gives: λ₊ = +(k+1/2)/R, λ₋ = -(k+3/2)/R (asymmetric!)
+    # Total dimension: k=0 contribution + k≥1 levels
+    total_dim = int(k0_neg_degeneracy + sum(dimensions))
+
+    # Construct Hermitian matrix
+    # Combined spectrum gives canonical symmetric ±3/2, ±5/2, ±7/2, ...
     operator = np.zeros((total_dim, total_dim), dtype=complex)
 
     offset = 0
+
+    # k=0 level: negative branch only (λ = -3/2)
+    eigenvalue_k0_neg = -(0 + 1.5) / radius  # -(0 + 3/2) / R = -3/2 / R
+    for i in range(k0_neg_degeneracy):
+        operator[offset + i, offset + i] = eigenvalue_k0_neg
+    offset += k0_neg_degeneracy
+
+    # k≥1 levels: both positive and negative branches
     for k, dim_k, deg_pos, deg_neg in zip(k_values, dimensions, degeneracies_pos, degeneracies_neg):
         # Eigenvalues for level k (arXiv:1103.4097 page 15)
         eigenvalue_pos = (k + 0.5) / radius  # +(k + 1/2) / R
