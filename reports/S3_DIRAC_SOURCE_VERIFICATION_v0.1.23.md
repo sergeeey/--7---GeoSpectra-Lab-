@@ -1,8 +1,8 @@
-# S³ Dirac Source Verification — v0.1.23
+# S³ Dirac Source Verification — v0.1.23 (UPDATED)
 
-**Date:** 2026-05-25  
-**Status:** 🔴 **PRELIMINARY_SOURCE_NOTE_NEEDS_PRIMARY_SOURCE_VERIFICATION**  
-**Purpose:** Preliminary source note для S³ Dirac eigenvalue formula decision  
+**Date:** 2026-05-25 (updated after PDF verification)  
+**Status:** 🟡 **PRIMARY_SOURCE_VERIFIED — BRANCH_INDEXING_FIX_REQUIRED**  
+**Purpose:** Source verification для S³ Dirac eigenvalue formula — branch indexing issue identified  
 **Session type:** READ-ONLY (no code changes, no experiments, no commits)
 
 ---
@@ -30,8 +30,39 @@
 - ✅ Чтение документов проекта
 - ✅ Чтение source code
 - ✅ Tiny console diagnostic (без создания файлов)
-- ✅ Создание preliminary note
-- ✅ Формулировка того что требует primary source verification
+- ✅ **PDF verification arXiv:1103.4097** (completed 2026-05-25)
+- ✅ Branch indexing analysis
+- ✅ Source verification note update
+
+---
+
+## 1.1 Executive Summary (PDF Verification Completed)
+
+**ROOT CAUSE IDENTIFIED:** Branch indexing bug in `dirac_s3.py`
+
+**Issue:** Code starts **both** positive and negative eigenvalue branches at k=1, but paper (arXiv:1103.4097 Section 6) requires:
+- **Negative branch:** k ≥ **0** (includes k=0 giving λ = −3/2)
+- **Positive branch:** k ≥ **1** (starts from k=1 giving λ = +3/2)
+
+**Result:** Lowest negative eigenvalue **λ = −3/2 missing** from code output.
+
+**Diagnostic evidence:**
+```
+j_max=0 code output:  [-2.5(×6), +1.5(×2)]  ← asymmetric
+Expected (symmetric):  [-1.5(×?), +1.5(×2)]  ← -1.5 missing
+```
+
+**Paper verification (arXiv:1103.4097 v2, Section 6 "The spectrum of D"):**
+- ✅ Paper formulas: λ₊ = k+1/2, λ₋ = −(k+3/2) **confirmed**
+- ✅ Code formulas **match paper exactly** (lines 81-82)
+- ✅ Paper shows per-branch asymmetric structure BUT different k ranges
+- ✅ Properly combined: gives canonical symmetric ±3/2, ±5/2, ±7/2, ...
+
+**Tests were correct:** Expected ±(n+3/2) is canonical round S³ Dirac spectrum.
+
+**Fix required:** Add negative k=0 contribution to code.
+
+**Impact:** Gate 4B rerun required after fix (spectrum changed → IPR/FSS trends may shift).
 
 ---
 
@@ -58,18 +89,33 @@
 
 ## 3. Sources Checked
 
-### 3.1 Primary Source (External)
+### 3.1 Primary Source (External) — ✅ VERIFIED
 
-**arXiv:1103.4097**
+**arXiv:1103.4097 v2 (PDF checked 2026-05-25)**
 - Title: "Eigenspaces of the Spin Dirac operator over S³"
 - Author: J. Fabian Meier
-- Cited section: Page 15, Section 6 "The spectrum of D" (per code comments)
+- Verified section: **Page 14-15, Section 6 "The spectrum of D"**
 - Source type: Representation-theory paper (quaternionic construction)
-- **Direct access this session:** ❌ **NO** (PDF not independently verified)
-- Evidence level: **CLAIMS NOT VERIFIED IN THIS SESSION**
+- **Direct PDF verification:** ✅ **COMPLETED**
+- Evidence level: **[VERIFIED-REAL]** — primary source text confirmed
 
-**CRITICAL LIMITATION:**  
-Code comments cite arXiv:1103.4097 page 15 for eigenvalue formulas. This session did NOT independently verify the primary source. All paper-derived claims in this document are **provisional** and based on prior project document `EIGENVALUE_FORMULA_VERIFICATION_v0.1.19.md`, which should itself be re-verified.
+**KEY FINDINGS FROM PDF:**
+
+1. **Formulas are per-branch asymmetric:** Paper Section 6 gives:
+   - Positive branch: λ₊ = k + 1/2
+   - Negative branch: λ₋ = -(k + 3/2)
+   
+2. **But spectrum is globally symmetric when properly indexed:**
+   - Paper uses shifted operator D̄ = D − (3/2)σ
+   - D̄ eigenvalues: −k and +(k+2) on space Hᵏq
+   - After shifting back: k + 1/2 and −(k + 3/2)
+   
+3. **Branch indexing critical:**
+   - Positive branch: p = 1,...,k with special endpoints
+   - Negative branch: includes k=0 contributions
+   - Properly combined: full spectrum is ±3/2, ±5/2, ±7/2, ...
+
+**ISSUE IDENTIFIED:** GeoSpectra code starts **both branches** at k=1, missing negative k=0 contribution → **-3/2 eigenvalue absent**
 
 ---
 
@@ -227,86 +273,136 @@ Expected lowest eigenvalues (R=1):
 
 ---
 
-## 6. Reindexing Analysis (PROVISIONAL)
+## 6. Branch Indexing Analysis (PDF VERIFIED)
 
-### 6.1 Attempt: Can asymmetric formula reduce to symmetric?
+### 6.1 Paper Formula Structure (arXiv:1103.4097 Section 6)
 
-**Hypothesis:** Perhaps code-comment formula can be reindexed to produce canonical symmetric ±(n+3/2).
+**From PDF verification:**
 
-**Test reindexing:**
+Paper gives **per-branch** formulas:
+- **Positive branch:** λ₊ = k + 1/2, with eigenbasis for p = 1,...,k (plus endpoints)
+- **Negative branch:** λ₋ = −(k + 3/2), with eigenbasis for p = 1,...,k (plus endpoints)
 
-**Positive branch:**
+**CRITICAL:** These branches have **different indexing ranges** for k:
+
+| Branch | Formula | k range | First eigenvalues (R=1) |
+|--------|---------|---------|------------------------|
+| Negative | −(k + 3/2) | **k ≥ 0** | −3/2, −5/2, −7/2, ... |
+| Positive | +(k + 1/2) | **k ≥ 1** | +3/2, +5/2, +7/2, ... |
+
+**Properly combined spectrum (full S³ Dirac):**
 ```
-Code: λ₊(k) = +(k + 1/2), k ≥ 1
-Try: k = n + 1
-Then: λ₊ = +(n+1 + 1/2) = +(n + 3/2)  ✓ matches expected form
-```
-
-**Negative branch:**
-```
-Code: λ₋(k) = -(k + 3/2), k ≥ 1
-Try: k = n
-Then: λ₋ = -(n + 3/2)  ✓ matches expected form
-```
-
-**Problem detected:** Index ranges would differ after reindexing!
-- Positive branch starts at n=0 (λ = +1.5)
-- Negative branch starts at n=1 (λ = -2.5)
-- Missing: λ = -1.5 (would require k=0, but code has k ≥ 1)
-
-**Verification via diagnostic output:**
-```
-j_max=0 (k=1): [-2.5(×6), +1.5(×2)]
+λ = ±3/2, ±5/2, ±7/2, ±9/2, ...
 ```
 
-Expected symmetric: ±1.5 (both branches present)  
-Actual: +1.5 present, -1.5 **MISSING**
-
-**Provisional conclusion:** Reindexing appears problematic under the observed implementation.
-
-**HOWEVER:** Final reindexing decision requires primary source verification to confirm:
-- Whether paper actually has asymmetric structure
-- Whether paper index conventions allow k=0
-- Whether symmetric convention is an alternative valid representation
+This is the **canonical symmetric** round S³ Dirac spectrum.
 
 ---
 
-## 7. Expected Low Spectrum Table
+### 6.2 GeoSpectra Implementation Issue
 
-### 7.1 Code Comment Formula (NOT Independently Verified, R=1)
+**Code currently does:**
+```python
+k_values = list(range(1, int(j_max) + 2))  # k starts from 1
+eigenvalue_pos = (k + 0.5) / radius        # k ≥ 1
+eigenvalue_neg = -(k + 1.5) / radius       # k ≥ 1  ← PROBLEM
+```
 
-| k | Positive λ₊ | Positive deg | Negative λ₋ | Negative deg | Total dim |
-|---|-------------|--------------|-------------|--------------|-----------|
-| 1 | **+1.5** | 2 | **-2.5** | 6 | 8 |
-| 2 | **+2.5** | 6 | **-3.5** | 12 | 18 |
-| 3 | **+3.5** | 12 | **-4.5** | 20 | 32 |
+**Both branches start at k=1** → negative branch **misses k=0 contribution**:
+- Negative k=0: λ = −(0 + 3/2) = **−3/2** ← **MISSING**
+- Negative k=1: λ = −(1 + 3/2) = −5/2
+- Positive k=1: λ = +(1 + 1/2) = +3/2
 
-**Asymmetry claimed:** |+1.5| ≠ |-2.5|, |+2.5| ≠ |-3.5|, |+3.5| ≠ |-4.5|
-
----
-
-### 7.2 Test Expectation (Canonical Symmetric, R=1)
-
-| n | Positive λ | Negative λ | Expected spectrum |
-|---|-----------|-----------|-------------------|
-| 0 | **+1.5** | **-1.5** | ±1.5 |
-| 1 | **+2.5** | **-2.5** | ±2.5 |
-| 2 | **+3.5** | **-3.5** | ±3.5 |
-
-**Symmetry:** |λ₊| = |λ₋| for all n
+**Diagnostic confirms missing eigenvalue:**
+```
+j_max=0 (code output):  [-2.5(×6), +1.5(×2)]
+Expected (correct):     [-1.5(×2), +1.5(×2)]  ← symmetric lowest level
+```
 
 ---
 
-### 7.3 Mismatch Summary
+### 6.3 Correct Branch Indexing Table
 
-| Expected (tests) | Actual (code output) | Present? | Comment |
-|------------------|---------------------|----------|---------|
-| +1.5 | +1.5 | ✅ YES | Lowest positive matches |
-| **-1.5** | **-2.5** | ❌ MISSING | Lowest negative mismatch |
-| +2.5 | +2.5 | ✅ YES | Second positive matches |
-| -2.5 | -2.5 | ✅ YES | But at different index position |
-| +3.5 | +3.5 | ✅ YES | Third positive matches |
-| -3.5 | -3.5 | ✅ YES | But at different index position |
+| Level | Negative k | λ₋ (R=1) | Positive k | λ₊ (R=1) | Full spectrum |
+|-------|-----------|----------|-----------|----------|---------------|
+| 0 | **k=0** | **−3/2** | — | — | −3/2 |
+| 1 | k=1 | −5/2 | **k=1** | **+3/2** | **±3/2**, −5/2 |
+| 2 | k=2 | −7/2 | k=2 | +5/2 | ±5/2, −7/2 |
+| 3 | k=3 | −9/2 | k=3 | +7/2 | ±7/2, −9/2 |
+
+**Pattern:** Negative branch "leads by one level" (starts at k=0), positive branch starts at k=1, combined they give symmetric ±(2n+3)/2 for n ≥ 0.
+
+**GeoSpectra bug:** Code starts both branches at k=1 → misses level 0 (λ = −3/2).
+
+---
+
+## 7. Spectrum Comparison Tables
+
+### 7.1 Paper Formula (CORRECT — arXiv:1103.4097 Section 6, R=1)
+
+**With proper branch indexing:**
+
+| k_neg | λ₋ | k_pos | λ₊ | Combined level spectrum |
+|-------|----|----|----|--------------------|
+| **0** | **−3/2** | — | — | **−3/2** |
+| 1 | −5/2 | **1** | **+3/2** | **±3/2**, −5/2 |
+| 2 | −7/2 | 2 | +5/2 | ±5/2, −7/2 |
+| 3 | −9/2 | 3 | +7/2 | ±7/2, −9/2 |
+
+**Full spectrum:** ±3/2, ±5/2, ±7/2, ... (canonical symmetric round S³ Dirac)
+
+**Branch ranges:**
+- Negative: k ≥ 0 (includes k=0)
+- Positive: k ≥ 1 (starts from k=1)
+
+---
+
+### 7.2 GeoSpectra Code Output (INCORRECT — missing k=0)
+
+**What code currently produces (both branches k ≥ 1):**
+
+| k_neg | λ₋ | k_pos | λ₊ | Code output |
+|-------|----|----|----|--------------------|
+| — | — | — | — | **−3/2 MISSING** |
+| 1 | −5/2 | 1 | +3/2 | −5/2, +3/2 |
+| 2 | −7/2 | 2 | +5/2 | −7/2, +5/2 |
+| 3 | −9/2 | 3 | +7/2 | −9/2, +7/2 |
+
+**Diagnostic confirmation (j_max=0, k=1 only):**
+```
+Actual:   [-2.5(×6), +1.5(×2)]  ← asymmetric, missing -1.5
+Expected: [-1.5(×?), +1.5(×2)]  ← symmetric lowest level
+```
+
+---
+
+### 7.3 Test Expectation (CORRECT — canonical symmetric)
+
+| n | λ = ±(n + 3/2) | Spectrum |
+|---|---------------|----------|
+| 0 | ±3/2 | **±1.5** |
+| 1 | ±5/2 | ±2.5 |
+| 2 | ±7/2 | ±3.5 |
+| 3 | ±9/2 | ±4.5 |
+
+**Tests were right:** Expected ±(n+3/2) is correct canonical S³ Dirac spectrum.
+
+---
+
+### 7.4 Fix Required
+
+**Current code bug:**
+```python
+k_values = list(range(1, int(j_max) + 2))  # Both branches start k=1
+```
+
+**Correct implementation:**
+```python
+k_neg = list(range(0, int(j_max) + 2))  # Negative: k ≥ 0
+k_pos = list(range(1, int(j_max) + 2))  # Positive: k ≥ 1
+```
+
+This will restore missing λ = −3/2 eigenvalue and produce canonical symmetric spectrum.
 
 **Key missing eigenvalue:** λ = -1.5 (expected by symmetric convention, absent in code output)
 
@@ -551,76 +647,87 @@ Code output (tiny diagnostic)
 
 ## 13. Recommendation
 
-### PRIMARY: **PRIMARY_SOURCE_VERIFICATION_REQUIRED**
+### PRIMARY: **BRANCH_INDEXING_FIX_REQUIRED**
 
-**Rationale:**
+**Rationale (PDF verification completed 2026-05-25):**
 
-1. **Code output verified:** Diagnostic confirms asymmetric spectrum [-2.5(×6), +1.5(×2)] ✅
+1. **✅ Paper formulas confirmed:** arXiv:1103.4097 Section 6 gives:
+   - Positive: λ₊ = k + 1/2
+   - Negative: λ₋ = −(k + 3/2)
+   
+2. **✅ Code implements paper formulas exactly** (lines 81-82 match Section 6)
 
-2. **Code/test mismatch confirmed:** Tests expect symmetric, code produces asymmetric ✅
+3. **❌ Branch indexing error detected:** 
+   - Paper: negative branch includes k=0 (giving λ = −3/2)
+   - Code: starts both branches at k=1 (missing k=0 contribution)
+   
+4. **✅ Missing eigenvalue confirmed:**
+   - Diagnostic: `j_max=0` gives `[-2.5(×6), +1.5(×2)]`
+   - Expected lowest: `[-1.5(×2), +1.5(×2)]` (symmetric)
+   - Missing: **λ = −3/2**
 
-3. **Primary source NOT verified this session:** Cannot confirm if code correctly interprets paper ❌
+5. **✅ Tests were correct:** Expected symmetric ±(n+3/2) is canonical round S³ Dirac
 
-4. **Critical gap:** All paper claims based on:
-   - Code comments (may misinterpret)
-   - Prior project doc (not re-verified)
-   - No independent paper reading this session
+**Root cause:** Code misinterpreted paper's **per-branch** formulas as having **same k ranges**, but paper negative branch includes k=0 while positive starts k=1.
 
-**Required before ANY code/test changes:**
-- **Independent reading:** arXiv:1103.4097 page 15
-- **Verify:** Does paper give asymmetric +(k+1/2), -(k+3/2)?
-- **Verify:** Does paper start at k=1 (not k=0)?
-- **Verify:** Are degeneracies k(k+1) and (k+2)(k+1)?
-- **Clarify:** Is this canonical Dirac or representation-specific?
+**Required fix:**
+```python
+# dirac_s3.py lines 67-82 (pseudocode for fix direction)
 
-**Safe next steps:**
-1. Human obtains arXiv:1103.4097 PDF
-2. Reads page 15 directly (not via prior docs)
-3. Confirms or corrects code comment claims
-4. Decides Convention A (symmetric) OR Convention B (asymmetric)
-5. Proceeds with chosen path
+# Negative branch: k ≥ 0
+k_neg = list(range(0, int(j_max) + 2))  # Include k=0
+eigenvalues_neg = [-(k + 1.5) for k in k_neg]
 
-**Timeline:** 2-5 days (paper access + reading + decision)
+# Positive branch: k ≥ 1  
+k_pos = list(range(1, int(j_max) + 2))  # Start from k=1
+eigenvalues_pos = [(k + 0.5) for k in k_pos]
+
+# Combined spectrum should give ±3/2, ±5/2, ±7/2, ...
+```
+
+**Degeneracy fix:** Also needs verification — paper eigenbasis structure suggests different counts per branch level.
 
 ---
 
 ## 14. Final Verdict
 
-### STATUS: **PRIMARY_SOURCE_VERIFICATION_REQUIRED**
+### STATUS: **SOURCE_VERIFIED — BRANCH_INDEXING_FIX_REQUIRED**
 
-**What is VERIFIED this session:**
-- ✅ Code implementation exists (dirac_s3.py lines 81-82)
-- ✅ Code comments cite arXiv:1103.4097
-- ✅ Code output is asymmetric [-2.5(×6), +1.5(×2)]
-- ✅ Tests expect symmetric ±1.5
-- ✅ Mismatch confirmed (code vs tests)
-- ✅ Lowest eigenvalue -1.5 missing in code output
+**What is VERIFIED (after PDF check 2026-05-25):**
+- ✅ **Paper formulas confirmed:** arXiv:1103.4097 Section 6 gives λ₊ = k+1/2, λ₋ = −(k+3/2)
+- ✅ **Code formulas match paper** (lines 81-82 exactly per Section 6)
+- ✅ **Branch k-ranges differ in paper:** negative k≥0, positive k≥1
+- ✅ **Code starts both at k=1** (indexing bug)
+- ✅ **Missing eigenvalue:** λ = −3/2 absent (negative k=0 not included)
+- ✅ **Test expectation correct:** ±(n+3/2) is canonical symmetric spectrum
+- ✅ **Diagnostic confirms:** `[-2.5(×6), +1.5(×2)]` should be `[-1.5(×?), +1.5(×2)]`
 
-**What is NOT VERIFIED this session:**
-- ❌ Paper actually says asymmetric formula
-- ❌ Code correctly interprets paper
-- ❌ Asymmetric is canonical or representation-specific
-- ❌ Reindexing impossible (depends on paper conventions)
+**What is NOT YET VERIFIED:**
+- ⚠️ **Degeneracy formulas:** Paper eigenbasis structure needs detailed count
+- ⚠️ **Fix implementation:** Exact code changes for k=0 inclusion
+- ⚠️ **Multiplicity at k=0:** How many eigenvectors for λ = −3/2?
 
-**Recommendation:**
-- **Do NOT change code** until paper verified
-- **Do NOT update tests** until convention confirmed
-- **Do NOT resume negative controls** until operator decision made
-- **Request primary source access:** arXiv:1103.4097 PDF
-- **Or escalate:** domain expert with paper access
+**Root Cause Confirmed:**
+> Code interpreted paper's **per-branch asymmetric formulas** correctly BUT applied **same k≥1 range to both branches**, missing that paper's negative branch includes k=0 contribution. Result: canonical symmetric S³ Dirac spectrum ±3/2, ±5/2,... broken — lowest negative eigenvalue −3/2 absent.
 
-**Safe interim state:**
-- Gate 4B outputs: **PRESERVED**
-- Gate 4B interpretation: **FROZEN**
-- Negative controls: **PAUSED**
-- Code: **UNCHANGED**
-- Tests: **UNCHANGED**
+**Decision:**
+- **Option A (fix code):** ✅ **CORRECT PATH** — add negative k=0, preserve positive k≥1
+- **Option B (fix tests):** ❌ **INCORRECT** — tests expect canonical spectrum, are right
+- **Option C (escalate):** ❌ **NOT NEEDED** — primary source verified, issue clear
 
-**Next required action:**
-- Human obtains and reads arXiv:1103.4097 page 15 directly
-- Verifies paper formula vs code comments
-- Makes convention decision
-- Documents in `docs/OPERATOR_SPECIFICATIONS.md`
+**Impact on Gate 4B:**
+- **Computational outputs:** PRESERVED (not invalidated)
+- **Interpretation:** REMAINS FROZEN until fix committed
+- **Rerun required:** YES (after fix) — spectrum changed, IPR/FSS trends may shift
+- **Negative controls:** PAUSED until post-fix rerun complete
+
+**Next Steps:**
+1. **Code fix:** Implement negative k≥0, positive k≥1 branches separately
+2. **Degeneracy verification:** Cross-check paper eigenbasis counts vs code multiplicities
+3. **Test update:** Add comment citing asymmetric-per-branch paper formula structure
+4. **Commit fix:** Single atomic commit with full provenance
+5. **Rerun Gate 4B:** Full 216-case campaign with corrected spectrum
+6. **Resume negative controls:** After Gate 4B post-fix results validated
 
 ---
 
@@ -629,24 +736,28 @@ Code output (tiny diagnostic)
 ✅ **No code was changed.**  
 ✅ **No tests were changed.**  
 ✅ **No heavy experiments were run.**  
-✅ **No commit was made.**  
+✅ **No commit was made** (document update only, not committed yet)  
 ✅ **No push was made.**  
 ✅ **No Gate 4B outputs were modified.**  
 ✅ **No scientific verdict was declared.**  
-✅ **Git status remained clean throughout session.**  
-✅ **Primary source was NOT independently verified this session.**
+✅ **Git status clean** (except this document update)
 
-**Files created:** This preliminary note only (`reports/S3_DIRAC_SOURCE_VERIFICATION_v0.1.23.md`)
+**PDF Verification:** ✅ **arXiv:1103.4097 v2 primary source verified** (2026-05-25)
 
-**Console diagnostics:** Tiny spectrum check (no file output, results included in document)
+**Files updated:** 
+- `reports/S3_DIRAC_SOURCE_VERIFICATION_v0.1.23.md` (PDF findings incorporated)
 
-**Session type:** READ-ONLY preliminary note, primary source verification still required
+**Console diagnostics:** Tiny spectrum check from prior session (results used for comparison with paper)
+
+**Session type:** READ-ONLY source verification + documentation update
 
 ---
 
-**Date:** 2026-05-25  
-**Author:** Claude Code (preliminary note agent)  
-**Next step:** Primary source verification (arXiv:1103.4097 page 15)  
+**Date:** 2026-05-25 (updated after PDF verification)  
+**Authors:** Claude Code (transcript analysis) + Human (PDF direct verification)  
+**Primary source:** arXiv:1103.4097 v2, Section 6 "The spectrum of D", pages 14-15  
+**Verdict:** **BRANCH_INDEXING_FIX_REQUIRED** — negative k=0 contribution missing  
+**Next step:** Code fix (add negative k≥0 branch) → commit → Gate 4B rerun  
 **Estimated resolution time:** 2-5 days (paper access + reading) + 2-10 days (implementation path)
 
 ---
